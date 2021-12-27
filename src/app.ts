@@ -34,7 +34,13 @@ app.use(globalErrorController);
 
 //Routes
 import userRouter from './routes/user';
-app.use("/api/auth",userRouter);
+import categoryRouter from './routes/category';
+import entryRouter from './routes/entry';
+
+app.use('/api/auth', userRouter);
+app.use('/api/categories', categoryRouter);
+app.use('/api/entries', entryRouter);
+
 app.all('*', (_req: Request, _res: Response, next: NextFunction) => {
     return next(new AppError('This route is not yet defined!', 404));
 });

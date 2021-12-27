@@ -18,7 +18,7 @@ router.get("/verify-email/:emailVerificationCode", verifyEmail);
 router.post("/forgot-password", forgotPassword);
 router.get("/current-user", getLoggedInUser);
 
-router.route("profile").get(protect, getProfile).put(protect, updateProfile);
+router.route("/profile").get(protect, getProfile).put(protect, updateProfile);
 
 const userRoter = router;
 export default userRoter;

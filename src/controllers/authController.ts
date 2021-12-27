@@ -45,7 +45,7 @@ export const signup = asyncHandler(
             emailVerificationCode,
             emailVerified: false,
         });
-        const verificationUrl = `${req.protocol}://${req.headers.host}/api/users/verify-email/${emailVerificationCode}`;
+        const verificationUrl = `${req.protocol}://${req.headers.host}/api/auth/verify-email/${emailVerificationCode}`;
         sendVerificationEmail(user, verificationUrl);
 
         res.status(201).json({

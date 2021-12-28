@@ -17,12 +17,6 @@ const EntryModel = new Schema(
             type: Number,
             required: true,
         },
-        datesCharge: [
-            {
-                type: Date,
-                require: true,
-            },
-        ],
         description: {
             type: String,
             required: true,

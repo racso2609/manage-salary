@@ -7,13 +7,14 @@ interface userInterface {
   email: string;
   password: string;
   role: string;
-  emailVerified: Boolean;
+  emailVerified: boolean;
   emailVerificationCode?: string;
   passwordResetToken?: string ;
   passwordResetExpires?: string;
   phone?: string;
   firstName: string;
   lastName: string;
+  _id: mongoose.Schema.Types.ObjectId;
 }
 const UserModel = new Schema({
   email: {

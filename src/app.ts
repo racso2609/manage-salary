@@ -41,7 +41,8 @@ import expenseRouter from './routes/expense';
 app.use('/api/auth', userRouter);
 app.use('/api/categories', categoryRouter);
 app.use('/api/entries', entryRouter);
-app.use('/api/expends', expenseRouter);
+app.use('/api/entries', entryRouter);
+app.use('/api/expense', expenseRouter);
 
 app.all('*', (_req: Request, _res: Response, next: NextFunction) => {
     return next(new AppError('This route is not yet defined!', 404));

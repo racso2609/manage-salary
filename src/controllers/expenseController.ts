@@ -33,7 +33,7 @@ export const getExpenses = asyncHandler(async (req: Request, res: Response) => {
     });
 });
 
-export const getExpens = asyncHandler(async (req: Request, res: Response) => {
+export const getExpense = asyncHandler(async (req: Request, res: Response) => {
     const { expendId } = req.params;
     const expend = await Expense.findById(expendId);
     res.json({

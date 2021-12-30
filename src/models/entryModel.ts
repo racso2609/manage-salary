@@ -1,17 +1,17 @@
-import mongoose = require('mongoose');
+import {Document, Schema, model} from 'mongoose'
 import { userInterface } from '../models/userModel';
-const Schema = mongoose.Schema;
 
-interface entryInterface {
+interface entryInterface extends Document {
     amount: number;
     datesCharge: [Date];
     description: string;
-    user: mongoose.Schema.Types.ObjectId | userInterface;
+    user: Schema.Types.ObjectId | userInterface;
+    active: boolean;
     createAt: Date;
     updateAt: Date;
 }
 
-const EntryModel = new Schema(
+const EntryModel = new Schema<entryInterface>(
     {
         amount: {
             type: Number,
@@ -34,5 +34,5 @@ const EntryModel = new Schema(
     { timestamps: true }
 );
 
-const Entry = mongoose.model('Entry', EntryModel);
+const Entry = model('Entry', EntryModel);
 export { Entry, entryInterface };

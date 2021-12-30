@@ -5,15 +5,14 @@ import { AppError } from '../utils/AppError';
 
 export const createEntry = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-        const { amount, datesCharge, description }: entryInterface = req.body;
+        const { amount, description }: entryInterface = req.body;
         const { _id } = req.user;
-        if (!amount || !datesCharge?.length || !description)
+        if (!amount || !description)
             return next(new AppError('Missing Data!', 400));
 
         const entry = await Entry.create({
             user: _id,
             amount,
-            datesCharge,
             description,
         });
         res.status(200).json({

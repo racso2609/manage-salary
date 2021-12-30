@@ -5,7 +5,7 @@ import { AppError } from '../utils/AppError';
 
 export const getCategories = asyncHandler(
     async (_req: Request, res: Response) => {
-        const categories = Category.find();
+        const categories = await Category.find();
         res.json({
             success: true,
             status: 'success',

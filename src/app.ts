@@ -37,12 +37,14 @@ import userRouter from './routes/user';
 import categoryRouter from './routes/category';
 import entryRouter from './routes/entry';
 import expenseRouter from './routes/expense';
+import dataRouter from './routes/data';
 
 app.use('/api/auth', userRouter);
 app.use('/api/categories', categoryRouter);
 app.use('/api/entries', entryRouter);
 app.use('/api/entries', entryRouter);
-app.use('/api/expense', expenseRouter);
+app.use('/api/expenses', expenseRouter);
+app.use('/api/data', dataRouter);
 
 app.all('*', (_req: Request, _res: Response, next: NextFunction) => {
     return next(new AppError('This route is not yet defined!', 404));
@@ -54,7 +56,10 @@ app.all('*', (_req: Request, _res: Response, next: NextFunction) => {
         const connectionString =
             NODE_ENV === 'test' ? MONGO_URI_TEST : MONGO_URI;
 
-        await mongoose.connect(connectionString);
+        await mongoose.connect(connectionString, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
         console.log('Database Connected');
         const PORT = process.env.PORT || 3001;
         app.listen(PORT, () => console.log(`Server is listening on ${PORT}`));

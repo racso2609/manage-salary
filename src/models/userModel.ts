@@ -1,9 +1,8 @@
-import mongoose = require("mongoose");
+import {Document, Schema, model} from 'mongoose'
 import bcrypt = require("bcrypt");
 import crypto = require("crypto");
 
-const Schema = mongoose.Schema;
-interface userInterface {
+interface userInterface extends Document {
   email: string;
   password: string;
   role: string;
@@ -14,9 +13,10 @@ interface userInterface {
   phone?: string;
   firstName: string;
   lastName: string;
-  _id: mongoose.Schema.Types.ObjectId;
+  isValidPassword: (password:string)=>boolean;
+  createPasswordResetToken: ()=>string
 }
-const UserModel = new Schema({
+const UserModel = new Schema<userInterface>({
   email: {
     type: String,
     require: true,
@@ -74,5 +74,5 @@ UserModel.methods.createPasswordResetToken = function () {
   return resetToken;
 };
 
-const User = mongoose.model("User", UserModel);
+const User = model("User", UserModel);
 export { User, userInterface };

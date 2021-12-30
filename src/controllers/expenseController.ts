@@ -34,8 +34,8 @@ export const getExpenses = asyncHandler(async (req: Request, res: Response) => {
 });
 
 export const getExpense = asyncHandler(async (req: Request, res: Response) => {
-    const { expendId } = req.params;
-    const expend = await Expense.findById(expendId);
+    const { expenseId } = req.params;
+    const expend = await Expense.findById(expenseId);
     res.json({
         success: true,
         status: 'success',
@@ -45,12 +45,34 @@ export const getExpense = asyncHandler(async (req: Request, res: Response) => {
 
 export const deleteExpense = asyncHandler(
     async (req: Request, res: Response) => {
-        const { expendId } = req.params;
-        const deletedExpend = await Expense.findByIdAndDelete(expendId);
+        const { expenseId } = req.params;
+        const deletedExpend = await Expense.findByIdAndDelete(expenseId);
         res.json({
             status: 'success',
             success: true,
             deletedExpend,
+        });
+    }
+);
+
+export const updateExpense = asyncHandler(
+    async (req: Request, res: Response, _next: NextFunction) => {
+        const { expenseId } = req.params;
+        const { description, amount, category } = req.body;
+
+        const expense = await Expense.findByIdAndUpdate(
+            expenseId,
+            {
+                description,
+                category,
+                amount,
+            },
+            { new: true }
+        );
+        res.json({
+            status: 'success',
+            success: true,
+            expense,
         });
     }
 );

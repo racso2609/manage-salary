@@ -2,7 +2,6 @@ import passport = require("passport");
 import { Strategy, ExtractJwt } from "passport-jwt";
 import { NextFunction, Request, Response } from "express";
 import { AppError } from "./utils/AppError";
-require("dotenv").config();
 
 passport.use(
   new Strategy(

@@ -1,14 +1,15 @@
-import mongoose = require('mongoose');
+import {Document, Schema, model} from 'mongoose'
 import { categoryInterface } from './categoriesModel';
-const Schema = mongoose.Schema;
+import { userInterface } from './userModel';
 
-interface expenseInterface {
+interface expenseInterface extends Document {
     amount: number;
     category: mongoose.Schema.Types.ObjectId | categoryInterface;
     description: string;
+    user: mongoose.Schema.Types.ObjectId | userInterface;
 }
 
-const expenseModel = new Schema(
+const expenseModel = new Schema<expenseInterface>(
     {
         amount: {
             type: Number,
@@ -34,5 +35,5 @@ const expenseModel = new Schema(
     }
 );
 
-const Expense = mongoose.model('Expense', expenseModel);
+const Expense = model('Expense', expenseModel);
 export { Expense, expenseInterface };

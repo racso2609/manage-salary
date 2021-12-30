@@ -1,18 +1,16 @@
-import mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import { Document, Schema, model } from 'mongoose';
 
-interface categoryInterface {
-  name: string;
-  _id: mongoose.Schema.Types.ObjectId;
+interface categoryInterface extends Document {
+    name: string;
 }
 
-const CategoryModel = new Schema({
-  name: {
-    type: String,
-    required: true,
-    unique: true
-  }
-})
+const CategoryModel = new Schema<categoryInterface>({
+    name: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+});
 
-const Category = mongoose.model('Category', CategoryModel);
-export {Category, categoryInterface}
+const Category = model('Category', CategoryModel);
+export { Category, categoryInterface };

@@ -88,10 +88,10 @@ export const login = asyncHandler(
             success: true,
             Token: token,
             role: user.role,
-            Email: user.email,
-            Phone: user.phone,
-            Firstname: user.firstName,
-            Lastname: user.lastName,
+            email: user.email,
+            phone: user.phone,
+            firstname: user.firstName,
+            lastname: user.lastName,
         });
     }
 );

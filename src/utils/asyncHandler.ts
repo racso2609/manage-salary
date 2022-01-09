@@ -1,5 +1,7 @@
-import {NextFunction,Request,Response} from "express";
+import { NextFunction, Request, Response } from 'express';
 
-export const asyncHandler = (asyncFn: Function) => (req:Request, res: Response, next: NextFunction) => {
-  asyncFn(req, res, next).catch(next);
-};
+export const asyncHandler =
+    (asyncFn: Function) =>
+    (req: Request, res: Response, next: NextFunction) => {
+        asyncFn(req, res, next).catch(next);
+    };

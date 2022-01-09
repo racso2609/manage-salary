@@ -42,7 +42,7 @@ import dataRouter from './routes/data';
 app.use('/api/auth', userRouter);
 app.use('/api/categories', categoryRouter);
 app.use('/api/entries', entryRouter);
-app.use('/api/entries', entryRouter);
+// app.use('/api/entries', entryRouter);
 app.use('/api/expenses', expenseRouter);
 app.use('/api/data', dataRouter);
 

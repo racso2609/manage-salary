@@ -64,13 +64,14 @@ export const toggleEntry = asyncHandler(
 
 export const updateEntry = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-        const { description, amount } = req.body;
+        const { description, name, amount } = req.body;
         if (!description || !amount)
             return next(new AppError('Missing Data!', 400));
         const { entryId } = req.params;
         const entry = await Entry.findByIdAndUpdate(entryId, {
             description,
             amount,
+            name
         });
         res.json({
             success: true,

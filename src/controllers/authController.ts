@@ -10,6 +10,18 @@ import { Payload } from '../interfaces/interfaces';
 
 const isValidEmail = (email: string) => /^\S+@\S+\.\S+$/.test(email);
 
+declare global {
+    namespace Express {
+        interface User {
+            _id: string;
+            email: string;
+            role: string;
+            phone: string;
+            name: string;
+        }
+    }
+}
+
 const signToken = (payload: Payload) =>
     jwt.sign({ user: payload }, process.env.SECRET_KEY, {
         expiresIn: 7200,
@@ -70,16 +82,16 @@ export const login = asyncHandler(
             return next(
                 new AppError('Your email has not been verified yet!', 400)
             );
-        const isCorrectPassword = await user.isValidPassword(password);
+        const isCorrectPassword = user.isValidPassword(password);
         if (!isCorrectPassword)
             return next(new AppError('Wrong password!', 404));
 
-        const payload = {
+        const payload: Payload = {
             _id: user._id,
             email: user.email,
             role: user.role,
             phone: user.phone,
-            Name: user.firstName + ' ' + user.lastName,
+            name: `${user.firstName} ${user.lastName}`,
         };
         const token = signToken(payload);
 
@@ -97,7 +109,7 @@ export const login = asyncHandler(
 );
 
 export const verifyEmail = asyncHandler(
-    async (req: Request, res: Response, next: NextFunction) => {
+    async (req: Request, res: Response, _next: NextFunction) => {
         const { emailVerificationCode } = req.params;
 
         await User.findOneAndUpdate(
@@ -107,10 +119,7 @@ export const verifyEmail = asyncHandler(
         );
 
         // TODO: Update the redirection url in production
-        const redirectionUrl =
-            process.env.NODE_ENV === 'development'
-                ? 'http://localhost:3000/login'
-                : '';
+        const redirectionUrl = process.env.HOST;
         res.redirect(redirectionUrl);
     }
 );
@@ -180,14 +189,12 @@ export const resetPassword = asyncHandler(
 
         await user.save();
 
-        const payload = {
+        const payload: Payload = {
             _id: user._id,
             email: user.email,
             role: user.role,
             phone: user.phone,
-            firstName: user.firstName,
-            lastName: user.firstName,
-            Name: user.firstName + ' ' + user.lastName,
+            name: user.firstName + ' ' + user.lastName,
         };
         const token = signToken(payload);
 
@@ -212,7 +219,7 @@ export const getProfile = asyncHandler(
     }
 );
 export const updateProfile = asyncHandler(
-    async (req: Request, res: Response, next: NextFunction) => {
+    async (req: Request, res: Response, _next: NextFunction) => {
         const { firstName, lastName, phone, email } = req.body;
 
         const updatedUser = await User.findByIdAndUpdate(

@@ -1,6 +1,10 @@
 import { Document, Schema, model } from 'mongoose';
 import { userInterface } from '../models/userModel';
 
+interface datesPeriod {
+    date: string;
+}
+
 interface entryInterface extends Document {
     amount: number;
     datesCharge: [Date];
@@ -9,9 +13,11 @@ interface entryInterface extends Document {
     createAt: Date;
     updateAt: Date;
     name: string;
+    dates: [datesPeriod];
+    active: Boolean;
 }
 
-const EntryModel = new Schema<entryInterface>(
+const automaticEntryModel = new Schema<entryInterface>(
     {
         name: {
             type: String,
@@ -30,9 +36,15 @@ const EntryModel = new Schema<entryInterface>(
             ref: 'User',
             required: true,
         },
+        dates: [
+            {
+                date: String,
+            },
+        ],
+        active: Boolean,
     },
     { timestamps: true }
 );
 
-const Entry = model('Entry', EntryModel);
-export { Entry, entryInterface };
+const AutomaticEntry = model('Entry', automaticEntryModel);
+export { AutomaticEntry, entryInterface };

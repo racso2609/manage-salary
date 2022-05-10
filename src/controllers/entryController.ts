@@ -46,32 +46,17 @@ export const getEntry = asyncHandler(async (req: Request, res: Response) => {
     });
 });
 
-export const toggleEntry = asyncHandler(
-    async (req: Request, res: Response, next: NextFunction) => {
-        const { entryId } = req.params;
-        const oldEntry = await Entry.findById(entryId);
-        if (!oldEntry) return next(new AppError('Entry do not exist!', 404));
-
-        const active = !oldEntry.active;
-        const entry = await Entry.findByIdAndUpdate(
-            entryId,
-            { active },
-            { new: true }
-        );
-        res.json({ success: true, status: 'success', entry });
-    }
-);
-
 export const updateEntry = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-        const { description, name, amount } = req.body;
+        const { description, name, amount, repeat } = req.body;
         if (!description || !amount)
             return next(new AppError('Missing Data!', 400));
         const { entryId } = req.params;
         const entry = await Entry.findByIdAndUpdate(entryId, {
             description,
             amount,
-            name
+            name,
+            repeat,
         });
         res.json({
             success: true,

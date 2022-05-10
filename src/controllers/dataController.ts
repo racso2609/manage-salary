@@ -13,19 +13,21 @@ export const getTotalAvaliable = asyncHandler(
             { $match: { user: ObjectId(_id) } },
             { $group: { _id: '', totalExpense: { $sum: '$amount' } } },
         ]);
-        totalExpenses = totalExpenses[0].totalExpense;
+
+        totalExpenses = totalExpenses[0] ? totalExpenses[0]?.totalExpense : 0;
+
         let totalEntries = await Entry.aggregate([
             { $match: { user: ObjectId(_id) } },
             { $group: { _id: '', totalEntry: { $sum: '$amount' } } },
         ]);
-        totalEntries = totalEntries[0].totalEntry;
-        
+        totalEntries = totalEntries[0] ? totalEntries[0].totalEntry : 0;
+
         res.json({
             success: true,
             status: 'success',
             totalExpenses,
             totalEntries,
-            total: totalEntries - totalExpenses
+            total: totalEntries - totalExpenses,
         });
     }
 );

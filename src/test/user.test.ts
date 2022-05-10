@@ -4,6 +4,7 @@ import app = require('../app');
 describe('testing-server-routes', () => {
     it('GET /signup - success', async () => {
         const { body } = await request(app).get('/login'); //uses the request function that calls on express app instance
+        console.log(body);
         // expect(body).toEqual([
         // {
         // state: 'NJ',

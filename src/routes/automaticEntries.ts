@@ -9,11 +9,11 @@ import {
 const router = express.Router();
 
 router
-    .route('/automatic-entry')
+    .route('/')
     .get(protect, getAutomaticEntries)
     .post(protect, createAutomaticEntry);
 router
-    .route('/automatic-entry/:entryId')
+    .route('/:entryId')
     .get(protect, getAutomaticEntries)
     .put(protect, updateAutomaticEntry)
     .delete(protect, deleteAutomaticEntry);

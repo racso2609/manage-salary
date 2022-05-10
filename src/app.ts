@@ -14,9 +14,9 @@ import { AppError } from './utils/AppError';
 dotenv.config();
 const app = express();
 // const limit = ratelimit({
-    // max: 1000,
-    // windowMs: 60 * 60 * 1000,
-    // message: 'Too Many request, you are blocked for 1 hour',
+// max: 1000,
+// windowMs: 60 * 60 * 1000,
+// message: 'Too Many request, you are blocked for 1 hour',
 // });
 
 app.use(express.urlencoded({ extended: false, limit: '10mb' }));
@@ -38,13 +38,14 @@ import categoryRouter from './routes/category';
 import entryRouter from './routes/entry';
 import expenseRouter from './routes/expense';
 import dataRouter from './routes/data';
+import automaticEntry from './routes/automaticEntries';
 
 app.use('/api/auth', userRouter);
 app.use('/api/categories', categoryRouter);
 app.use('/api/entries', entryRouter);
-// app.use('/api/entries', entryRouter);
 app.use('/api/expenses', expenseRouter);
 app.use('/api/data', dataRouter);
+app.use('/api/automatic-entries', automaticEntry);
 
 app.all('*', (_req: Request, _res: Response, next: NextFunction) => {
     return next(new AppError('This route is not yet defined!', 404));

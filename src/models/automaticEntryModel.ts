@@ -46,5 +46,5 @@ const automaticEntryModel = new Schema<entryInterface>(
     { timestamps: true }
 );
 
-const AutomaticEntry = model('Entry', automaticEntryModel);
+const AutomaticEntry = model('AutomaticEntry', automaticEntryModel);
 export { AutomaticEntry, entryInterface };

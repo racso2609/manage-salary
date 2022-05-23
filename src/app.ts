@@ -51,6 +51,8 @@ app.all('*', (_req: Request, _res: Response, next: NextFunction) => {
     return next(new AppError('This route is not yet defined!', 404));
 });
 
+app.use(globalErrorController);
+
 (async () => {
     try {
         const { NODE_ENV, MONGO_URI_TEST, MONGO_URI } = process.env;

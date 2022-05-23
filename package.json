@@ -7,7 +7,7 @@
         "tsc": "tsc",
         "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts",
         "prod": "tsc && node ./dist/app.js",
-        "test": "NODE_ENV=test jest --testTimeout=10000 --detectOpenHandles"
+        "test": "NODE_ENV=test jest --testTimeout=100000"
     },
     "author": "",
     "type": "module",

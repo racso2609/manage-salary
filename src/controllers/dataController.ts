@@ -9,18 +9,18 @@ const ObjectId = Types.ObjectId;
 export const getTotalAvaliable = asyncHandler(
     async (req: Request, res: Response, _next: NextFunction) => {
         const { _id } = req.user;
-        let totalExpenses = await Expense.aggregate([
-            { $match: { user: ObjectId(_id) } },
+        const expenses = await Expense.aggregate([
+            { $match: { user: new ObjectId(_id) } },
             { $group: { _id: '', totalExpense: { $sum: '$amount' } } },
         ]);
 
-        totalExpenses = totalExpenses[0] ? totalExpenses[0]?.totalExpense : 0;
+        const totalExpenses = expenses[0] ? expenses[0]?.totalExpense : 0;
 
-        let totalEntries = await Entry.aggregate([
-            { $match: { user: ObjectId(_id) } },
+        const entries = await Entry.aggregate([
+            { $match: { user: new ObjectId(_id) } },
             { $group: { _id: '', totalEntry: { $sum: '$amount' } } },
         ]);
-        totalEntries = totalEntries[0] ? totalEntries[0].totalEntry : 0;
+        const totalEntries = entries[0] ? entries[0].totalEntry : 0;
 
         res.json({
             success: true,

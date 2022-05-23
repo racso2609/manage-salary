@@ -1,12 +1,12 @@
-import {Document, Schema, model} from 'mongoose'
+import { Document, Schema, model } from 'mongoose';
 import { categoryInterface } from './categoriesModel';
 import { userInterface } from './userModel';
 
 interface expenseInterface extends Document {
     amount: number;
-    category: mongoose.Schema.Types.ObjectId | categoryInterface;
+    category: Schema.Types.ObjectId | categoryInterface;
     description: string;
-    user: mongoose.Schema.Types.ObjectId | userInterface;
+    user: Schema.Types.ObjectId | userInterface;
 }
 
 const expenseModel = new Schema<expenseInterface>(

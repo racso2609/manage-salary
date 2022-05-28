@@ -47,7 +47,7 @@ export const signup = asyncHandler(
         if (existingUser) return next(new AppError('Email already taken', 400));
 
         const emailVerificationCode = crypto.randomBytes(32).toString('hex');
-        const user = await User.create({
+        const createdUser = await User.create({
             firstName,
             lastName,
             email,
@@ -57,8 +57,11 @@ export const signup = asyncHandler(
             emailVerificationCode,
             emailVerified: false,
         });
+        const user = await User.find(createdUser._id).select(
+            'firstName lastName role phone email photo'
+        );
         const verificationUrl = `${req.protocol}://${req.headers.host}/api/auth/verify-email/${emailVerificationCode}`;
-        sendVerificationEmail(user, verificationUrl);
+        sendVerificationEmail(createdUser, verificationUrl);
 
         res.status(201).json({
             status: 'success',
@@ -118,7 +121,6 @@ export const verifyEmail = asyncHandler(
             { new: true }
         );
 
-        // TODO: Update the redirection url in production
         const redirectionUrl = process.env.HOST;
         res.redirect(redirectionUrl);
     }

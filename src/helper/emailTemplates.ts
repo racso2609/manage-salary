@@ -1,5 +1,10 @@
-export const getVerificationEmailTemplate = (user, verificationUrl) => {
-  return `
+import { userInterface } from '../models/userModel';
+
+export const getVerificationEmailTemplate = (
+    user: userInterface,
+    verificationUrl: string
+) => {
+    return `
     <div>
     <span>Thanks for signing up</span>, ${user.firstName} ${user.lastName}
     <div>

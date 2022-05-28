@@ -6,7 +6,7 @@ import morgan = require('morgan');
 import helmet = require('helmet');
 import dotenv = require('dotenv');
 //import xss from "xss";
-import ratelimit = require('express-rate-limit');
+// import ratelimit = require('express-rate-limit');
 import mongoose = require('mongoose');
 import { globalErrorController } from './controllers/globalError';
 import { AppError } from './utils/AppError';
@@ -51,16 +51,15 @@ app.all('*', (_req: Request, _res: Response, next: NextFunction) => {
     return next(new AppError('This route is not yet defined!', 404));
 });
 
+app.use(globalErrorController);
+
 (async () => {
     try {
         const { NODE_ENV, MONGO_URI_TEST, MONGO_URI } = process.env;
         const connectionString =
             NODE_ENV === 'test' ? MONGO_URI_TEST : MONGO_URI;
 
-        await mongoose.connect(connectionString, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
+        await mongoose.connect(connectionString, {});
         console.log('Database Connected');
         const PORT = process.env.PORT || 3001;
         app.listen(PORT, () => console.log(`Server is listening on ${PORT}`));

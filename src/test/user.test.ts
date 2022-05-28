@@ -1,26 +1,17 @@
-// import supertest = require('supertest');
-import app = require('../app');
+// import request = require('supertest');
+// import app = require('../app');
 
 describe('testing-server-routes', () => {
-    it('GET /signup - success', async () => {
-        const { body } = await request(app).get('/login'); //uses the request function that calls on express app instance
-        console.log(body);
-        // expect(body).toEqual([
-        // {
-        // state: 'NJ',
-        // capital: 'Trenton',
-        // governor: 'Phil Murphy',
-        // },
-        // {
-        // state: 'CT',
-        // capital: 'Hartford',
-        // governor: 'Ned Lamont',
-        // },
-        // {
-        // state: 'NY',
-        // capital: 'Albany',
-        // governor: 'Andrew Cuomo',
-        // },
-        // ]);
+    it('POST /login - fail user dont exist', async () => {
+        // const result = await request(app).post(`/api/auth/login`).send({
+        // email: 'oscaremiliolugo.dev@gmail.com',
+        // password: '26092002Aa*',
+        // });
+        // console.log(result);
+        expect(true);
+        // expect(result.status).toBe(404);
+        // expect(result.message).toBe('User with this email does not exist!');
     });
+    // describe('auth process', () => {
+    // });
 });

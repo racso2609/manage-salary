@@ -121,7 +121,6 @@ export const verifyEmail = asyncHandler(
             { new: true }
         );
 
-        // TODO: Update the redirection url in production
         const redirectionUrl = process.env.HOST;
         res.redirect(redirectionUrl);
     }

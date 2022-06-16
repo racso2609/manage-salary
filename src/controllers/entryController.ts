@@ -65,3 +65,13 @@ export const updateEntry = asyncHandler(
         });
     }
 );
+
+export const deleteEntry = asyncHandler(async (req: Request, res: Response) => {
+    const { entryId } = req.params;
+    const deletedEntry = await Entry.findByIdAndDelete(entryId);
+    res.json({
+        status: 'success',
+        success: true,
+        deletedEntry,
+    });
+});

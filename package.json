@@ -9,7 +9,9 @@
         "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts",
         "prod": "tsc && node ./dist/app.js",
         "test": "NODE_ENV=test jest --testTimeout=100000",
-        "build": "tsc --build"
+        "build": "rimraf dist && tsc",
+        "ts.check": "tsc --project tsconfig.json",
+        "add-build": "git add dist"
     },
     "author": "",
     "license": "ISC",
@@ -49,6 +51,13 @@
         "@typescript-eslint/eslint-plugin": "^5.7.0",
         "@typescript-eslint/parser": "^5.7.0",
         "eslint": "^8.5.0",
+        "pre-commit": "^1.2.2",
+        "rimraf": "^4.4.0",
         "supertest": "^6.2.3"
-    }
+    },
+    "pre-commit": [
+        "ts.check",
+        "build",
+        "add-build"
+    ]
 }

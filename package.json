@@ -5,9 +5,9 @@
     "main": "index.js",
     "scripts": {
         "tsc": "tsc",
-        "start": "node dist/app.js",
-        "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts",
-        "prod": "tsc && node ./dist/app.js",
+        "start": "node dist/server.js",
+        "dev": "ts-node-dev --respawn --transpile-only ./src/server.ts",
+        "prod": "tsc && node ./dist/server.js",
         "test": "NODE_ENV=test jest --testTimeout=100000",
         "build": "tsc --build"
     },
@@ -22,6 +22,7 @@
         "@types/morgan": "^1.9.3",
         "@types/node": "^16.11.0",
         "@types/passport": "^1.0.7",
+        "axios": "^1.2.5",
         "bcrypt": "^5.0.1",
         "cloudinary": "^1.27.1",
         "cors": "^2.8.5",

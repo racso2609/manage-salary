@@ -27,22 +27,32 @@ const signToken = (payload: Payload) =>
         expiresIn: 7200,
     });
 
-const sendVerificationEmail = (
+const sendVerificationEmail = async (
     user: userInterface,
     verificationUrl: string
 ) => {
-    new Email(
-        user.email,
-        'Verify your email',
-        'Please verify your email by clicking on the button above',
-        getVerificationEmailTemplate(user, verificationUrl)
-    ).send();
+    try {
+        await new Email(
+            user.email,
+            'Verify your email',
+            'Please verify your email by clicking on the button above',
+            getVerificationEmailTemplate(user, verificationUrl)
+        ).send();
+    } catch (error) {
+        // TODO: add db task to auto re-run
+        // Note: should make a way to notificate to the admin
+        console.error(error.message);
+    }
 };
 
 export const signup = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-        const { firstName, lastName, email, password, phone }: userInterface =
+        const { firstName, lastName, password, phone }: userInterface =
             req.body;
+
+        let email = req.body.email;
+        email = email.toLowerCase();
+
         const existingUser = await User.findOne({ email });
         if (existingUser) return next(new AppError('Email already taken', 400));
 
@@ -61,7 +71,7 @@ export const signup = asyncHandler(
             'firstName lastName role phone email photo'
         );
         const verificationUrl = `${req.protocol}://${req.headers.host}/api/auth/verify-email/${emailVerificationCode}`;
-        sendVerificationEmail(createdUser, verificationUrl);
+        await sendVerificationEmail(createdUser, verificationUrl);
 
         res.status(201).json({
             status: 'success',
@@ -72,10 +82,12 @@ export const signup = asyncHandler(
 );
 export const login = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-        const { email, password }: { email: string; password: string } =
-            req.body;
+        const { password }: { email: string; password: string } = req.body;
+        let email = req.body.email;
+        email = email.toLowerCase();
 
         const user = await User.findOne({ email });
+
         if (!user)
             return next(
                 new AppError('User with this email does not exist!', 404)
@@ -112,14 +124,16 @@ export const login = asyncHandler(
 );
 
 export const verifyEmail = asyncHandler(
-    async (req: Request, res: Response, _next: NextFunction) => {
+    async (req: Request, res: Response, next: NextFunction) => {
         const { emailVerificationCode } = req.params;
 
-        await User.findOneAndUpdate(
+        const user = await User.findOneAndUpdate(
             { emailVerificationCode },
             { emailVerified: true },
             { new: true }
         );
+
+        if (!user) return next(new AppError('Code validation fail', 500));
 
         const redirectionUrl = process.env.HOST;
         res.redirect(redirectionUrl);
@@ -134,7 +148,7 @@ export const forgotPassword = asyncHandler(
         if (!isValidEmail(email))
             return next(new AppError('Email is not valid!', 400));
 
-        let user = await User.findOne({ email });
+        const user = await User.findOne({ email });
         if (!user) return next(new AppError('User not exist!', 404));
 
         const resetToken = user.createPasswordResetToken();

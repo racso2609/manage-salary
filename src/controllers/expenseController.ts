@@ -2,6 +2,8 @@ import { asyncHandler } from '../utils/asyncHandler';
 import { AppError } from '../utils/AppError';
 import { Response, Request, NextFunction } from 'express';
 import { expenseInterface, Expense } from '../models/expenseModel';
+import { BNOrder } from 'src/interfaces/binance/order';
+import { ObjectId } from 'mongoose';
 
 export const createExpense = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -24,8 +26,12 @@ export const createExpense = asyncHandler(
 );
 
 export const getExpenses = asyncHandler(async (req: Request, res: Response) => {
+    const { page, limit } = req.body;
     const { _id } = req.user;
-    const expends = await Expense.find({ user: _id });
+    const expends = await Expense.find({ user: _id })
+        .skip(page * limit)
+        .limit(limit ?? 20);
+
     res.json({
         status: 'success',
         success: true,
@@ -74,5 +80,38 @@ export const updateExpense = asyncHandler(
             success: true,
             expense,
         });
+    }
+);
+
+export const createExpensesByJson = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const data: BNOrder[] = req.body.expenses;
+        const formatedData: expenseInterface[] = data
+            .map((order) => {
+                if (order.Status === 'Completed')
+                    return {
+                        amount: order.Quantity,
+                        binance: {
+                            id: order['Order Number'].toString(),
+                            seller: order.Couterparty,
+                            unitPrice: order.Price.toString(),
+                            fiat: order['Fiat Type'],
+                            total: order['Total Price'].toString(),
+                            asset: order['Asset Type'],
+                            date: new Date(order['Created Time']),
+                        },
+                        user: req.user._id as unknown as ObjectId,
+                        // TODO: add category unknown
+                        description: `this is a binance order created on ${order['Created Time']} and not edited. Please add what do you buy here: `,
+                    };
+            })
+            .filter((order) => Boolean(order));
+        if (formatedData.length === 0)
+            return next(new AppError('Not correct data send', 500));
+
+        const ids = await Expense.create(formatedData);
+        console.log(formatedData, ids);
+
+        res.json({ success: true, status: 'success' });
     }
 );

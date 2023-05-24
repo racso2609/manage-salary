@@ -6,8 +6,7 @@ import mongoose from 'mongoose';
 import { User } from 'src/models/userModel';
 
 import { vi } from 'vitest';
-
-const HOST = process.env.HOST_TEST;
+import { HOST, signup } from './utils';
 
 declare module 'vitest' {
     export interface TestContext {
@@ -54,9 +53,7 @@ describe('testing-server-routes', () => {
     describe('Complete auth process', () => {
         beforeEach(async () => {
             const userSignup = { ...userData, phone: undefined };
-            const response = await request(HOST)
-                .post(`/api/auth/signup`)
-                .send(userSignup);
+            const response = await signup(userData);
 
             expect(response._body.status).toBe('success');
             expect(response._body.user[0].email).toBe(userSignup.email);

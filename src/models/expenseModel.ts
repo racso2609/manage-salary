@@ -44,7 +44,7 @@ const ExpenseModel = new Schema<expenseInterface & Document>(
             required: true,
         },
         binance: {
-            binanceId: { type: String },
+            binanceId: { type: String, unique: true },
             seller: String,
             unitPrice: { type: String },
             fiat: { type: String },

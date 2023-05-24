@@ -15,6 +15,7 @@ interface userInterface extends Document {
     lastName: string;
     isValidPassword: (password: string) => boolean;
     createPasswordResetToken: () => string;
+    binance: { apiKey: string };
 }
 const UserModel = new Schema<userInterface>({
     email: {
@@ -49,6 +50,7 @@ const UserModel = new Schema<userInterface>({
     emailVerificationCode: String,
     passwordResetToken: String,
     passwordResetExpires: Date,
+    binance: { apiKey: String },
 });
 
 UserModel.pre('save', async function (next) {

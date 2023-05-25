@@ -11,6 +11,7 @@ import {
     getProfile,
     resetPassword,
     generateApiKey,
+    getApiKey,
 } from '../controllers/authController';
 import { protect } from '../authenticate';
 

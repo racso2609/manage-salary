@@ -12,6 +12,7 @@ interface binanceExpenseInterface {
     asset: string;
     seller: string;
     date: Date;
+    orderType: string;
 }
 
 interface expenseInterface {
@@ -51,6 +52,7 @@ const ExpenseModel = new Schema<expenseInterface & Document>(
             total: { type: String },
             asset: { type: String },
             date: { type: Date },
+            orderType: { type: String, default: 'P2P' },
         },
     },
     {

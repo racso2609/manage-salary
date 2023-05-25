@@ -1,13 +1,15 @@
-export interface BNOrder {
-    orderNumber: number;
-    tradeType: string;
-    asset: string;
+enum OrderType {
+    P2P = 'P2P',
+    C2C = 'C2C',
+}
+export interface Order {
+    orderId: string;
+    orderType: OrderType;
+    seller: string;
+    unitPrice: string;
     fiat: string;
-    fiatSymbol: string;
-    amount: number;
-    totalPrice: number;
-    unitPrice: number;
-    orderStatus: string;
-    createTime: string;
-    counterPartNickName: string;
+    total: string;
+    asset: string;
+    date: string;
+    note: string;
 }

@@ -61,6 +61,21 @@ export const deleteExpense = asyncHandler(
     }
 );
 
+export const deleteExpenses = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { _id } = req.user;
+        const deletedExpenses = await Expense.deleteMany({
+            user: (_id as unknown )as ObjectId,
+        });
+
+        res.json({
+            status: 'success',
+            success: true,
+            deletedExpenses,
+        });
+    }
+);
+
 export const updateExpense = asyncHandler(
     async (req: Request, res: Response, _next: NextFunction) => {
         const { expenseId } = req.params;
@@ -92,33 +107,38 @@ export const createExpensesByJson = asyncHandler(
         const orderIdsRegistered = [];
         for (let i = 0; i < data.length; i++) {
             const expense = await Expense.findOne({
-                'binance.binanceId': data[i].orderNumber,
+                'binance.binanceId': data[i].orderId,
             });
 
-            if (expense) orderIdsRegistered.push(data[i].orderNumber);
+            if (expense) orderIdsRegistered.push(data[i].orderId);
         }
 
         const formatedData: expenseInterface[] = data
             .map((order) => {
-                if (
-                    order.orderStatus.toLowerCase() === 'completed' &&
-                    !orderIdsRegistered.includes(order.orderNumber)
-                ) {
+                if (!orderIdsRegistered.includes(order.orderId)) {
                     orderIdsRegistered.push(order.orderNumber);
                     return {
                         amount: order.amount,
                         binance: {
-                            binanceId: order.orderNumber,
+                            binanceId: order.orderId,
                             unitPrice: order.unitPrice,
                             fiat: order.fiat,
-                            total: order.totalPrice,
+                            total: order.total,
                             asset: order.asset,
-                            seller: order.counterPartNickName,
-                            date: new Date(order.createTime),
+                            seller: order.seller,
+                            date: new Date(order.date),
+                            orderType: order.orderType ?? 'P2P',
                         },
                         user: req.user._id as unknown as ObjectId,
                         // TODO: add category unknown
-                        description: `this is a binance order created on ${order.createTime} and not edited. Please add what do you buy here: `,
+                        description:
+                            order.note &&
+                            order.note !== '' &&
+                            order.note !== ' '
+                                ? order.note
+                                : `this is a binance order created on ${new Date(
+                                      order.createTime
+                                  )} and not edited. Please add what do you buy here: `,
                     };
                 }
             })

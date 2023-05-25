@@ -1,14 +1,23 @@
 import { Document, Schema, model } from 'mongoose';
 import { userInterface } from '../models/userModel';
-
+interface binanceEntryInterface {
+    binanceId: string;
+    unitPrice: string;
+    fiat: string;
+    total: string;
+    asset: string;
+    seller: string;
+    date: Date;
+    orderType: string;
+}
 interface entryInterface extends Document {
     amount: number;
-    datesCharge: [Date];
     description: string;
     user: Schema.Types.ObjectId | userInterface;
     createAt: Date;
     updateAt: Date;
     name: string;
+    binance: binanceEntryInterface;
 }
 
 const EntryModel = new Schema<entryInterface>(
@@ -29,6 +38,16 @@ const EntryModel = new Schema<entryInterface>(
             type: Schema.Types.ObjectId,
             ref: 'User',
             required: true,
+        },
+        binance: {
+            binanceId: { type: String, unique: true },
+            seller: String,
+            unitPrice: { type: String },
+            fiat: { type: String },
+            total: { type: String },
+            asset: { type: String },
+            date: { type: Date },
+            orderType: { type: String, default: 'P2P' },
         },
     },
     { timestamps: true }

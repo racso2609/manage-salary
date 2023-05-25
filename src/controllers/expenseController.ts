@@ -90,6 +90,14 @@ export const createExpensesByJson = asyncHandler(
             return next(new AppError('Data not provided', 400));
 
         const orderIdsRegistered = [];
+        for (let i = 0; i < data.length; i++) {
+            const expense = await Expense.findOne({
+                'binance.binanceId': data[i].orderNumber,
+            });
+
+            if (expense) orderIdsRegistered.push(data[i].orderNumber);
+        }
+
         const formatedData: expenseInterface[] = data
             .map((order) => {
                 if (
@@ -100,28 +108,26 @@ export const createExpensesByJson = asyncHandler(
                     return {
                         amount: order.amount,
                         binance: {
-                            id: order.orderNumber,
-                            seller: order.counterPartNickName,
+                            binanceId: order.orderNumber,
                             unitPrice: order.unitPrice,
                             fiat: order.fiat,
                             total: order.totalPrice,
                             asset: order.asset,
+                            seller: order.counterPartNickName,
                             date: new Date(order.createTime),
                         },
                         user: req.user._id as unknown as ObjectId,
                         // TODO: add category unknown
-                        description: `this is a binance order created on ${order.createdTime} and not edited. Please add what do you buy here: `,
+                        description: `this is a binance order created on ${order.createTime} and not edited. Please add what do you buy here: `,
                     };
                 }
             })
             .filter((order) => Boolean(order));
-        console.log(formatedData);
         if (formatedData.length === 0)
             return next(new AppError('Not correct data send', 500));
 
         const ids = await Expense.create(formatedData);
-        console.log(formatedData, ids);
 
-        res.json({ success: true, status: 'success' });
+        res.json({ success: true, status: 'success', expenses: ids });
     }
 );

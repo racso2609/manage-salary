@@ -15,7 +15,8 @@ interface userInterface extends Document {
     lastName: string;
     isValidPassword: (password: string) => boolean;
     createPasswordResetToken: () => string;
-    binance: { apiKey: string };
+    createApiKey: () => string;
+    apiKey?: string;
 }
 const UserModel = new Schema<userInterface>({
     email: {
@@ -50,7 +51,7 @@ const UserModel = new Schema<userInterface>({
     emailVerificationCode: String,
     passwordResetToken: String,
     passwordResetExpires: Date,
-    binance: { apiKey: String },
+    apiKey: String,
 });
 
 UserModel.pre('save', async function (next) {
@@ -62,7 +63,6 @@ UserModel.pre('save', async function (next) {
 UserModel.methods.isValidPassword = function (password: string) {
     return bcrypt.compare(password, this.password);
 };
-
 UserModel.methods.createPasswordResetToken = function () {
     const resetToken = crypto.randomBytes(32).toString('hex');
 
@@ -73,6 +73,12 @@ UserModel.methods.createPasswordResetToken = function () {
 
     this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
     return resetToken;
+};
+UserModel.methods.createApiKey = function () {
+    const apiSeed = crypto.randomBytes(32).toString('hex');
+
+    this.apiKey = crypto.createHash('sha256').update(apiSeed).digest('hex');
+    return this.apiKey;
 };
 
 const User = model('User', UserModel);

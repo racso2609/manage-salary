@@ -13,6 +13,7 @@ declare module 'vitest' {
         token: string;
         db?: typeof mongoose;
         expenses: expenseInterface[];
+        apiKey: string;
     }
 }
 
@@ -54,6 +55,15 @@ describe('Expenses', () => {
             .set({ Authorization: context.token });
         expect(response.statusCode).toBe(200);
         context.category = categories._body.categories[0];
+
+        response = await request(HOST)
+            .get(`/api/auth/create-api-key`)
+            .send(userData)
+            .set({ Authorization: context.token });
+
+        expect(response.statusCode).toBe(200);
+        expect(response._body.apiKey).toBeTruthy;
+        context.apiKey = 'ApiKey ' + response._body.apiKey;
     });
 
     test('should revert: create expense Missing data', async ({
@@ -147,6 +157,66 @@ describe('Expenses', () => {
         expect(response.statusCode).toBe(200);
         expect(response._body.expends.length).toBe(2);
     });
+    test('create expense from json with apiKey ', async ({
+        apiKey,
+        token,
+    }) => {
+        const jsonFromBinanceCSV = [
+            {
+                'Order Number': '20431588533342626000',
+                'Order Type': 'Sell',
+                'Asset Type': 'USDT',
+                'Fiat Type': 'VES',
+                'Total Price': 662.5,
+                Price: 13.25,
+                Quantity: 50,
+                'Exchange rate': '',
+                Couterparty: 'Migueltransfenix',
+                Status: 'Completed',
+                'Created Time': '2022-12-01 11:05:29',
+            },
+            {
+                'Order Number': '20431654764788273000',
+                'Order Type': 'Sell',
+                'Asset Type': 'USDT',
+                'Fiat Type': 'VES',
+                'Total Price': 650.55,
+                Price: 13.011,
+                Quantity: 50,
+                'Exchange rate': '',
+                Couterparty: 'MACRO-TRADER',
+                Status: 'Completed',
+                'Created Time': '2022-12-01 15:28:39',
+            },
+
+            {
+                'Order Number': '20431654764788273000',
+                'Order Type': 'Sell',
+                'Asset Type': 'USDT',
+                'Fiat Type': 'VES',
+                'Total Price': 650.55,
+                Price: 13.011,
+                Quantity: 50,
+                'Exchange rate': '',
+                Couterparty: 'MACRO-TRADER',
+                Status: 'Cancelled',
+                'Created Time': '2022-12-01 15:28:39',
+            },
+        ];
+        let response = await request(HOST)
+            .post('/api/expenses/external/json')
+            .send({ expenses: jsonFromBinanceCSV })
+            .set({ Authorization: apiKey });
+
+        expect(response.statusCode).toBe(200);
+        expect(response._body.status).toBe('success');
+        response = await request(HOST)
+            .get(`/api/expenses`)
+            .send({ page: 0, limit: 20 })
+            .set({ Authorization: token });
+        expect(response.statusCode).toBe(200);
+        expect(response._body.expends.length).toBe(2);
+    });
     describe('work with expenses', () => {
         beforeEach(async (context) => {
             context.expenses = [];
@@ -166,7 +236,7 @@ describe('Expenses', () => {
         });
         test('get expense', async ({ expenses, token }) => {
             const response = await request(HOST)
-                .get(`/api/expenses/${expenses[0]._id}`)
+                .get(`/api/expenses/expense/${expenses[0]._id}`)
                 .send()
                 .set({ Authorization: token });
             expect(response.statusCode).toBe(200);
@@ -190,19 +260,19 @@ describe('Expenses', () => {
         });
         test('delete expenses', async ({ token, expenses }) => {
             let response = await request(HOST)
-                .delete(`/api/expenses/${expenses[0]._id}`)
+                .delete(`/api/expenses/expense/${expenses[0]._id}`)
                 .send({ page: 0, limit: 20 })
                 .set({ Authorization: token });
             expect(response.statusCode).toBe(200);
             response = await request(HOST)
-                .get(`/api/expenses/${expenses[0]._id}`)
+                .get(`/api/expenses/expense/${expenses[0]._id}`)
                 .send()
                 .set({ Authorization: token });
             expect(response._body.expend).toBeFalsy;
         });
         test('update expenses', async ({ expenses, token }) => {
             const response = await request(HOST)
-                .put(`/api/expenses/${expenses[0]._id}`)
+                .put(`/api/expenses/expense/expense/${expenses[0]._id}`)
                 .send({ description: 'test' })
                 .set({ Authorization: token });
 

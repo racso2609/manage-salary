@@ -2,7 +2,8 @@ import passport = require('passport');
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { NextFunction, Request, Response } from 'express';
 import { AppError } from './utils/AppError';
-import { userInterface } from './models/userModel';
+import { userInterface, User } from './models/userModel';
+import { HeaderAPIKeyStrategy } from 'passport-headerapikey';
 
 type IDone = (error: null | Error, user?: userInterface) => void;
 
@@ -38,4 +39,26 @@ export const restrictTo =
         next();
     };
 
+passport.use(
+    new HeaderAPIKeyStrategy(
+        { header: 'Authorization', prefix: 'ApiKey ' },
+        false,
+        async function (apikey, done) {
+            console.log('hello', apikey);
+            try {
+                const user = await User.findOne({ apiKey: apikey });
+                if (!user) {
+                    return done(null, false);
+                }
+                return done(null, user);
+            } catch (error) {
+                return done(error);
+            }
+        }
+    )
+);
+
 export const protect = passport.authenticate('jwt', { session: false });
+export const apiKeyProtected = passport.authenticate('headerapikey', {
+    session: false,
+});

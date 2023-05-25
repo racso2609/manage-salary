@@ -13,6 +13,7 @@ declare module 'vitest' {
         db?: typeof mongoose;
         forgotData?: { email: string };
         newPassword?: string;
+        token: string;
     }
 }
 
@@ -239,6 +240,25 @@ describe('testing-server-routes', () => {
                             'Token is invalid or has expired'
                         );
                     });
+                });
+            });
+
+            describe('apiKey', () => {
+                beforeEach(async (context) => {
+                    const response = await request(HOST)
+                        .post(`/api/auth/login`)
+                        .send(userData);
+                    expect(response.statusCode).toBe(200);
+                    context.token = 'Bearer ' + response._body.Token;
+                });
+                test('create api key', async ({ token }) => {
+                    const response = await request(HOST)
+                        .post(`/api/auth/create-api-key`)
+                        .send(userData)
+                        .set({ Authorization: token });
+
+                    expect(response.statusCode).toBe(200);
+                    expect(response._body.apiKey).toBeTruthy;
                 });
             });
         });

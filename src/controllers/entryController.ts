@@ -29,9 +29,11 @@ export const createEntry = asyncHandler(
 
 export const getEntries = asyncHandler(
     async (req: Request, res: Response, _next: NextFunction) => {
-    const { page, limit } = req.body;
+        const { page, limit } = req.body;
         const { _id } = req.user;
-        const entries = await Entry.find({ user: _id }).skip(page*limit).limit(limit);
+        const entries = await Entry.find({ user: _id })
+            .skip(page * limit)
+            .limit(limit);
         res.status(200).json({
             status: 'success',
             success: true,

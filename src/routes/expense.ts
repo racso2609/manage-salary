@@ -11,7 +11,11 @@ import {
 import { apiKeyProtected, protect } from '../authenticate';
 const router = express.Router();
 
-router.route('/').get(protect, getExpenses).post(protect, createExpense).delete(protect, deleteExpenses);
+router
+    .route('/')
+    .get(protect, getExpenses)
+    .post(protect, createExpense)
+    .delete(protect, deleteExpenses);
 
 router.route('/json').post(protect, createExpensesByJson);
 router

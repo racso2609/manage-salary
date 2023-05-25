@@ -101,7 +101,7 @@ describe('Expenses', () => {
     });
 
     test('create expenses from json', async ({ token }) => {
-       const jsonFromBinanceCSV = [
+        const jsonFromBinanceCSV = [
             {
                 orderId: 382620441,
                 orderType: 'C2C',

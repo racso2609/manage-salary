@@ -65,7 +65,7 @@ export const deleteExpenses = asyncHandler(
     async (req: Request, res: Response) => {
         const { _id } = req.user;
         const deletedExpenses = await Expense.deleteMany({
-            user: (_id as unknown )as ObjectId,
+            user: _id as unknown as ObjectId,
         });
 
         res.json({

@@ -157,10 +157,7 @@ describe('Expenses', () => {
         expect(response.statusCode).toBe(200);
         expect(response._body.expends.length).toBe(2);
     });
-    test('create expense from json with apiKey ', async ({
-        apiKey,
-        token,
-    }) => {
+    test('create expense from json with apiKey ', async ({ apiKey, token }) => {
         const jsonFromBinanceCSV = [
             {
                 'Order Number': '20431588533342626000',

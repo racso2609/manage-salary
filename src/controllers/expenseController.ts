@@ -86,26 +86,36 @@ export const updateExpense = asyncHandler(
 export const createExpensesByJson = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
         const data: BNOrder[] = req.body.expenses;
+        if (!data || !data.length)
+            return next(new AppError('Data not provided', 400));
+
+        const orderIdsRegistered = [];
         const formatedData: expenseInterface[] = data
             .map((order) => {
-                if (order.Status === 'Completed')
+                if (
+                    order.orderStatus.toLowerCase() === 'completed' &&
+                    !orderIdsRegistered.includes(order.orderNumber)
+                ) {
+                    orderIdsRegistered.push(order.orderNumber);
                     return {
-                        amount: order.Quantity,
+                        amount: order.amount,
                         binance: {
-                            id: order['Order Number'].toString(),
-                            seller: order.Couterparty,
-                            unitPrice: order.Price.toString(),
-                            fiat: order['Fiat Type'],
-                            total: order['Total Price'].toString(),
-                            asset: order['Asset Type'],
-                            date: new Date(order['Created Time']),
+                            id: order.orderNumber,
+                            seller: order.counterPartNickName,
+                            unitPrice: order.unitPrice,
+                            fiat: order.fiat,
+                            total: order.totalPrice,
+                            asset: order.asset,
+                            date: new Date(order.createTime),
                         },
                         user: req.user._id as unknown as ObjectId,
                         // TODO: add category unknown
-                        description: `this is a binance order created on ${order['Created Time']} and not edited. Please add what do you buy here: `,
+                        description: `this is a binance order created on ${order.createdTime} and not edited. Please add what do you buy here: `,
                     };
+                }
             })
             .filter((order) => Boolean(order));
+        console.log(formatedData);
         if (formatedData.length === 0)
             return next(new AppError('Not correct data send', 500));
 

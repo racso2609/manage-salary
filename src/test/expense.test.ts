@@ -7,12 +7,16 @@ import mongoose from 'mongoose';
 import { User } from 'src/models/userModel';
 import { expenseInterface } from 'src/models/expenseModel';
 
+interface Expense extends expenseInterface {
+    _id: string;
+}
+
 declare module 'vitest' {
     export interface TestContext {
         category: { name: string; _id: string };
         token: string;
         db?: typeof mongoose;
-        expenses: expenseInterface[];
+        expenses: Expense[];
         apiKey: string;
     }
 }

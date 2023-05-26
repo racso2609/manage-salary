@@ -3,8 +3,7 @@ import { Response, Request, NextFunction } from 'express';
 import { asyncHandler } from '../utils/asyncHandler';
 import { AppError } from '../utils/AppError';
 import { ObjectId } from 'mongoose';
-import { Expense, expenseInterface } from 'src/models/expenseModel';
-import { BNEntryOrder, BNOrder } from 'src/interfaces/binance/order';
+import { Order } from 'src/interfaces/binance/order';
 
 export const createEntry = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -84,7 +83,7 @@ export const deleteEntry = asyncHandler(async (req: Request, res: Response) => {
 
 export const createEntriesByJson = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-        const data: BNOrder[] = req.body.entries;
+        const data: Order[] = req.body.entries;
         if (!data || !data.length)
             return next(new AppError('Data not provided', 400));
 
@@ -103,7 +102,7 @@ export const createEntriesByJson = asyncHandler(
                     orderIdsRegistered.push(order.orderId);
                     return {
                         name: order.note || 'alliance',
-                        amount: order.amount,
+                        amount: Number(order.amount),
                         binance: {
                             binanceId: order.orderId,
                             unitPrice: order.unitPrice,
@@ -122,7 +121,7 @@ export const createEntriesByJson = asyncHandler(
                             order.note !== ' '
                                 ? order.note
                                 : `this is a binance order created on ${new Date(
-                                      order.createTime
+                                      order.date
                                   )} and not edited. Please add what do you buy here: `,
                     };
                 }

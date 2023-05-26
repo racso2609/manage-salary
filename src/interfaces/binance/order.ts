@@ -12,4 +12,5 @@ export interface Order {
     asset: string;
     date: string;
     note: string;
+    amount: string;
 }

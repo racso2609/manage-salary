@@ -2,8 +2,8 @@ import { asyncHandler } from '../utils/asyncHandler';
 import { AppError } from '../utils/AppError';
 import { Response, Request, NextFunction } from 'express';
 import { expenseInterface, Expense } from '../models/expenseModel';
-import { BNOrder } from 'src/interfaces/binance/order';
 import { ObjectId } from 'mongoose';
+import { Order } from 'src/interfaces/binance/order';
 
 export const createExpense = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -100,7 +100,7 @@ export const updateExpense = asyncHandler(
 
 export const createExpensesByJson = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-        const data: BNOrder[] = req.body.expenses;
+        const data: Order[] = req.body.expenses;
         if (!data || !data.length)
             return next(new AppError('Data not provided', 400));
 
@@ -116,9 +116,9 @@ export const createExpensesByJson = asyncHandler(
         const formatedData: expenseInterface[] = data
             .map((order) => {
                 if (!orderIdsRegistered.includes(order.orderId)) {
-                    orderIdsRegistered.push(order.orderNumber);
+                    orderIdsRegistered.push(order.orderId);
                     return {
-                        amount: order.amount,
+                        amount: Number(order.amount),
                         binance: {
                             binanceId: order.orderId,
                             unitPrice: order.unitPrice,
@@ -137,7 +137,7 @@ export const createExpensesByJson = asyncHandler(
                             order.note !== ' '
                                 ? order.note
                                 : `this is a binance order created on ${new Date(
-                                      order.createTime
+                                      order.date
                                   )} and not edited. Please add what do you buy here: `,
                     };
                 }

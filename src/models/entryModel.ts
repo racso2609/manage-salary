@@ -10,17 +10,17 @@ interface binanceEntryInterface {
     date: Date;
     orderType: string;
 }
-interface entryInterface extends Document {
+interface entryInterface {
     amount: number;
     description: string;
     user: Schema.Types.ObjectId | userInterface;
-    createAt: Date;
-    updateAt: Date;
+    createAt?: Date;
+    updateAt?: Date;
     name: string;
     binance: binanceEntryInterface;
 }
 
-const EntryModel = new Schema<entryInterface>(
+const EntryModel = new Schema<entryInterface & Document>(
     {
         name: {
             type: String,

@@ -10,6 +10,8 @@ import {
     getLoggedInUser,
     getProfile,
     resetPassword,
+    generateApiKey,
+    getApiKey,
 } from '../controllers/authController';
 import { protect } from '../authenticate';
 
@@ -19,6 +21,8 @@ router.get('/verify-email/:emailVerificationCode', verifyEmail);
 router.post('/forgot-password', forgotPassword);
 router.post('/reset-password/:resetToken', resetPassword);
 router.get('/current-user', protect, getLoggedInUser);
+router.get('/create-api-key', protect, generateApiKey);
+router.get('/get-api-key', protect, getApiKey);
 
 router.route('/profile').get(protect, getProfile).put(protect, updateProfile);
 

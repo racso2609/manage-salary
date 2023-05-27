@@ -271,3 +271,22 @@ export const getLoggedInUser = asyncHandler(
         });
     }
 );
+
+export const generateApiKey = asyncHandler(
+    async (req: Request, res: Response, _next: NextFunction) => {
+        const { _id } = req.user;
+        const user = await User.findById(_id);
+        const apiKey = user.createApiKey();
+        await user.save({ validateBeforeSave: false });
+
+        res.json({ status: 'success', success: true, apiKey });
+    }
+);
+export const getApiKey = asyncHandler(
+    async (req: Request, res: Response, _next: NextFunction) => {
+        const { _id } = req.user;
+        const user = await User.findById(_id);
+        const apiKey = user.apiKey;
+        res.json({ status: 'success', success: true, apiKey });
+    }
+);

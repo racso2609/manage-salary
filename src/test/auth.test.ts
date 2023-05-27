@@ -6,14 +6,14 @@ import mongoose from 'mongoose';
 import { User } from 'src/models/userModel';
 
 import { vi } from 'vitest';
-
-const HOST = process.env.HOST_TEST;
+import { HOST, signup } from './utils';
 
 declare module 'vitest' {
     export interface TestContext {
         db?: typeof mongoose;
         forgotData?: { email: string };
         newPassword?: string;
+        token: string;
     }
 }
 
@@ -54,9 +54,7 @@ describe('testing-server-routes', () => {
     describe('Complete auth process', () => {
         beforeEach(async () => {
             const userSignup = { ...userData, phone: undefined };
-            const response = await request(HOST)
-                .post(`/api/auth/signup`)
-                .send(userSignup);
+            const response = await signup(userData);
 
             expect(response._body.status).toBe('success');
             expect(response._body.user[0].email).toBe(userSignup.email);
@@ -242,6 +240,25 @@ describe('testing-server-routes', () => {
                             'Token is invalid or has expired'
                         );
                     });
+                });
+            });
+
+            describe('apiKey', () => {
+                beforeEach(async (context) => {
+                    const response = await request(HOST)
+                        .post(`/api/auth/login`)
+                        .send(userData);
+                    expect(response.statusCode).toBe(200);
+                    context.token = 'Bearer ' + response._body.Token;
+                });
+                test('create api key', async ({ token }) => {
+                    const response = await request(HOST)
+                        .post(`/api/auth/create-api-key`)
+                        .send(userData)
+                        .set({ Authorization: token });
+
+                    expect(response.statusCode).toBe(200);
+                    expect(response._body.apiKey).toBeTruthy;
                 });
             });
         });

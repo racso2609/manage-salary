@@ -2,6 +2,8 @@ import { asyncHandler } from '../utils/asyncHandler';
 import { AppError } from '../utils/AppError';
 import { Response, Request, NextFunction } from 'express';
 import { expenseInterface, Expense } from '../models/expenseModel';
+import { ObjectId } from 'mongoose';
+import { Order } from 'src/interfaces/binance/order';
 
 export const createExpense = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -24,8 +26,12 @@ export const createExpense = asyncHandler(
 );
 
 export const getExpenses = asyncHandler(async (req: Request, res: Response) => {
+    const { page, limit } = req.body;
     const { _id } = req.user;
-    const expends = await Expense.find({ user: _id });
+    const expends = await Expense.find({ user: _id })
+        .skip(page * limit)
+        .limit(limit ?? 20);
+
     res.json({
         status: 'success',
         success: true,
@@ -55,6 +61,21 @@ export const deleteExpense = asyncHandler(
     }
 );
 
+export const deleteExpenses = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { _id } = req.user;
+        const deletedExpenses = await Expense.deleteMany({
+            user: _id as unknown as ObjectId,
+        });
+
+        res.json({
+            status: 'success',
+            success: true,
+            deletedExpenses,
+        });
+    }
+);
+
 export const updateExpense = asyncHandler(
     async (req: Request, res: Response, _next: NextFunction) => {
         const { expenseId } = req.params;
@@ -74,5 +95,59 @@ export const updateExpense = asyncHandler(
             success: true,
             expense,
         });
+    }
+);
+
+export const createExpensesByJson = asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const data: Order[] = req.body.expenses;
+        if (!data || !data.length)
+            return next(new AppError('Data not provided', 400));
+
+        const orderIdsRegistered = [];
+        for (let i = 0; i < data.length; i++) {
+            const expense = await Expense.findOne({
+                'binance.binanceId': data[i].orderId,
+            });
+
+            if (expense) orderIdsRegistered.push(data[i].orderId);
+        }
+
+        const formatedData: expenseInterface[] = data
+            .map((order) => {
+                if (!orderIdsRegistered.includes(order.orderId)) {
+                    orderIdsRegistered.push(order.orderId);
+                    return {
+                        amount: Number(order.amount),
+                        binance: {
+                            binanceId: order.orderId,
+                            unitPrice: order.unitPrice,
+                            fiat: order.fiat,
+                            total: order.total,
+                            asset: order.asset,
+                            seller: order.seller,
+                            date: new Date(order.date),
+                            orderType: order.orderType ?? 'P2P',
+                        },
+                        user: req.user._id as unknown as ObjectId,
+                        // TODO: add category unknown
+                        description:
+                            order.note &&
+                            order.note !== '' &&
+                            order.note !== ' '
+                                ? order.note
+                                : `this is a binance order created on ${new Date(
+                                      order.date
+                                  )} and not edited. Please add what do you buy here: `,
+                    };
+                }
+            })
+            .filter((order) => Boolean(order));
+        if (formatedData.length === 0)
+            return next(new AppError('Not correct data send', 500));
+
+        const ids = await Expense.create(formatedData);
+
+        res.json({ success: true, status: 'success', expenses: ids });
     }
 );

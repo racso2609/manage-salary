@@ -151,8 +151,7 @@ describe('Expenses', () => {
         expect(response.statusCode).toBe(200);
         expect(response._body.status).toBe('success');
         response = await request(HOST)
-            .get(`/api/expenses`)
-            .send({ page: 0, limit: 20 })
+            .get(`/api/expenses?page=${0}&limit=${20}`)
             .set({ Authorization: token });
         expect(response.statusCode).toBe(200);
         expect(response._body.expends.length).toBe(2);
@@ -204,8 +203,7 @@ describe('Expenses', () => {
         expect(response.statusCode).toBe(200);
         expect(response._body.status).toBe('success');
         response = await request(HOST)
-            .get(`/api/expenses`)
-            .send({ page: 0, limit: 20 })
+            .get(`/api/expenses?page=${0}&limit=${20}`)
             .set({ Authorization: token });
         expect(response.statusCode).toBe(200);
         expect(response._body.expends.length).toBe(2);
@@ -237,15 +235,13 @@ describe('Expenses', () => {
         });
         test('get expenses', async ({ token }) => {
             let response = await request(HOST)
-                .get(`/api/expenses`)
-                .send({ page: 0, limit: 20 })
+                .get(`/api/expenses?page=${0}&limit=${20}`)
                 .set({ Authorization: token });
             expect(response.statusCode).toBe(200);
             expect(response._body.expends.length).toBe(20);
 
             response = await request(HOST)
-                .get(`/api/expenses`)
-                .send({ page: 1, limit: 20 })
+                .get(`/api/expenses?page=${1}&limit=${20}`)
                 .set({ Authorization: token });
 
             expect(response.statusCode).toBe(200);
@@ -254,7 +250,6 @@ describe('Expenses', () => {
         test('delete expenses', async ({ token, expenses }) => {
             let response = await request(HOST)
                 .delete(`/api/expenses/expense/${expenses[0]._id}`)
-                .send({ page: 0, limit: 20 })
                 .set({ Authorization: token });
             expect(response.statusCode).toBe(200);
             response = await request(HOST)

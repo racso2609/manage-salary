@@ -31,11 +31,12 @@ exports.createExpense = (0, asyncHandler_1.asyncHandler)((req, res, next) => __a
     });
 }));
 exports.getExpenses = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { page, limit } = req.body;
+    var _a;
+    const { page, limit } = req.query;
     const { _id } = req.user;
     const expends = yield expenseModel_1.Expense.find({ user: _id })
-        .skip(page * limit)
-        .limit(limit !== null && limit !== void 0 ? limit : 20);
+        .skip(Number(page) * Number(limit))
+        .limit((_a = Number(limit)) !== null && _a !== void 0 ? _a : 20);
     res.json({
         status: 'success',
         success: true,

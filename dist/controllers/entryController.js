@@ -31,12 +31,14 @@ exports.createEntry = (0, asyncHandler_1.asyncHandler)((req, res, next) => __awa
     });
 }));
 exports.getEntries = (0, asyncHandler_1.asyncHandler)((req, res, _next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { page, limit } = req.query;
+    var _a, _b;
+    const page = (_a = Number(req.query.page)) !== null && _a !== void 0 ? _a : 1;
+    const limit = (_b = Number(req.query.limit)) !== null && _b !== void 0 ? _b : 20;
     const { _id } = req.user;
     const entries = yield entryModel_1.Entry.find({ user: _id })
         .sort({ createdAt: -1 })
-        .skip(Number(page) * Number(limit))
-        .limit(Number(limit));
+        .skip((page - 1) * limit)
+        .limit(limit);
     res.status(200).json({
         status: 'success',
         success: true,

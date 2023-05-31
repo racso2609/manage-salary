@@ -26,12 +26,14 @@ export const createExpense = asyncHandler(
 );
 
 export const getExpenses = asyncHandler(async (req: Request, res: Response) => {
-    const { page, limit } = req.query;
+    const page = Number(req.query.page) ?? 1;
+    const limit = Number(req.query.limit) ?? 20;
+
     const { _id } = req.user;
     const expends = await Expense.find({ user: _id })
         .sort({ createdAt: -1 })
-        .skip(Number(page) * Number(limit))
-        .limit(Number(limit) ?? 20);
+        .skip((page - 1) * limit)
+        .limit(limit);
 
     res.json({
         status: 'success',

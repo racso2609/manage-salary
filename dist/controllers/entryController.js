@@ -121,8 +121,6 @@ exports.createEntriesByJson = (0, asyncHandler_1.asyncHandler)((req, res, next) 
         }
     })
         .filter((order) => Boolean(order));
-    if (formatedData.length === 0)
-        return next(new AppError_1.AppError('Not correct data send', 500));
     const ids = yield entryModel_1.Entry.create(formatedData);
     res.json({ success: true, status: 'success', expenses: ids });
 }));

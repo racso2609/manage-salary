@@ -146,8 +146,6 @@ export const createExpensesByJson = asyncHandler(
                 }
             })
             .filter((order) => Boolean(order));
-        if (formatedData.length === 0)
-            return next(new AppError('Not correct data send', 500));
 
         const ids = await Expense.create(formatedData);
 

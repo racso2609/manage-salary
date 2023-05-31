@@ -130,8 +130,6 @@ export const createEntriesByJson = asyncHandler(
                 }
             })
             .filter((order) => Boolean(order));
-        if (formatedData.length === 0)
-            return next(new AppError('Not correct data send', 500));
 
         const ids = await Entry.create(formatedData);
 

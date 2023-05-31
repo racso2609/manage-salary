@@ -28,10 +28,8 @@ export const createExpense = asyncHandler(
 export const getExpenses = asyncHandler(async (req: Request, res: Response) => {
     const { page, limit } = req.query;
     const { _id } = req.user;
-    const expends = await Expense.find(
-        { user: _id },
-        { sort: { createdAt: -1 } }
-    )
+    const expends = await Expense.find({ user: _id })
+        .sort({ createdAt: -1 })
         .skip(Number(page) * Number(limit))
         .limit(Number(limit) ?? 20);
 

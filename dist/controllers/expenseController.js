@@ -34,9 +34,10 @@ exports.getExpenses = (0, asyncHandler_1.asyncHandler)((req, res) => __awaiter(v
     var _a, _b;
     const page = (_a = Number(req.query.page)) !== null && _a !== void 0 ? _a : 1;
     const limit = (_b = Number(req.query.limit)) !== null && _b !== void 0 ? _b : 20;
+    console.log(page, limit, (page - 1) * limit);
     const { _id } = req.user;
     const expends = yield expenseModel_1.Expense.find({ user: _id })
-        .sort({ createdAt: -1 })
+        .sort({ createdAt: -1, _id: 1 })
         .skip((page - 1) * limit)
         .limit(limit);
     res.json({

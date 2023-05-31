@@ -36,7 +36,7 @@ exports.getEntries = (0, asyncHandler_1.asyncHandler)((req, res, _next) => __awa
     const limit = (_b = Number(req.query.limit)) !== null && _b !== void 0 ? _b : 20;
     const { _id } = req.user;
     const entries = yield entryModel_1.Entry.find({ user: _id })
-        .sort({ createdAt: -1 })
+        .sort({ createdAt: -1, _id: 1 })
         .skip((page - 1) * limit)
         .limit(limit);
     res.status(200).json({

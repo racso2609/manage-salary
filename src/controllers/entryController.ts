@@ -33,7 +33,7 @@ export const getEntries = asyncHandler(
 
         const { _id } = req.user;
         const entries = await Entry.find({ user: _id })
-            .sort({ createdAt: -1 })
+            .sort({ createdAt: -1, _id: 1 })
             .skip((page - 1) * limit)
             .limit(limit);
         res.status(200).json({

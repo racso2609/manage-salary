@@ -5,7 +5,8 @@
         "outDir": "dist",
         "sourceMap": true,
         "paths": {
-            "@/*": ["./src/*"]
+            "@/*": ["./src/*"],
+            "@cronjobs/*": ["./src/cronjobs/*"]
         }
     },
 

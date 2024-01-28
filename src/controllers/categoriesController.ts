@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { Category } from '../models/categoriesModel';
-import { asyncHandler } from '../utils/asyncHandler';
-import { AppError } from '../utils/AppError';
+import { Category } from '@/models/categoriesModel';
+import { asyncHandler } from '@/utils/asyncHandler';
+import { AppError } from '@/utils/AppError';
 
 export const getCategories = asyncHandler(
     async (_req: Request, res: Response) => {
@@ -11,7 +11,7 @@ export const getCategories = asyncHandler(
             status: 'success',
             categories,
         });
-    }
+    },
 );
 
 export const createCategory = asyncHandler(
@@ -26,5 +26,5 @@ export const createCategory = asyncHandler(
             status: 'success',
             category,
         });
-    }
+    },
 );

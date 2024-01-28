@@ -1,5 +1,5 @@
 import express = require('express');
-import { protect } from '../authenticate';
+import { protect } from '@/authenticate';
 import {
     createAutomaticEntry,
     deleteAutomaticEntry,

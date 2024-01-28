@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { asyncHandler } from '../utils/asyncHandler';
-import { AppError } from '../utils/AppError';
-import { AutomaticEntry } from '../models/automaticEntryModel';
+import { asyncHandler } from '@/utils/asyncHandler';
+import { AppError } from '@/utils/AppError';
+import { AutomaticEntry } from '@/models/automaticEntryModel';
 
 export const createAutomaticEntry = asyncHandler(
     async (req: Request, res: Response, _next: NextFunction) => {
@@ -22,7 +22,7 @@ export const createAutomaticEntry = asyncHandler(
             status: 'success',
             entry,
         });
-    }
+    },
 );
 
 export const updateAutomaticEntry = asyncHandler(
@@ -45,7 +45,7 @@ export const updateAutomaticEntry = asyncHandler(
                 active: true,
                 user: _id,
             },
-            { new: true }
+            { new: true },
         );
 
         res.json({
@@ -53,7 +53,7 @@ export const updateAutomaticEntry = asyncHandler(
             status: 'success',
             entry,
         });
-    }
+    },
 );
 
 export const activeAutomaticEntry = asyncHandler(
@@ -71,7 +71,7 @@ export const activeAutomaticEntry = asyncHandler(
             {
                 active,
             },
-            { new: true }
+            { new: true },
         );
 
         res.json({
@@ -79,7 +79,7 @@ export const activeAutomaticEntry = asyncHandler(
             status: 'success',
             entry,
         });
-    }
+    },
 );
 
 export const deleteAutomaticEntry = asyncHandler(
@@ -98,7 +98,7 @@ export const deleteAutomaticEntry = asyncHandler(
             status: 'success',
             info,
         });
-    }
+    },
 );
 
 export const getAutomaticEntry = asyncHandler(
@@ -111,7 +111,7 @@ export const getAutomaticEntry = asyncHandler(
             status: 'success',
             entry,
         });
-    }
+    },
 );
 
 export const getAutomaticEntries = asyncHandler(
@@ -124,5 +124,5 @@ export const getAutomaticEntries = asyncHandler(
             status: 'success',
             entries,
         });
-    }
+    },
 );

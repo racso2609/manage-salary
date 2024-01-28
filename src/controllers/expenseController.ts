@@ -1,9 +1,9 @@
-import { asyncHandler } from '../utils/asyncHandler';
-import { AppError } from '../utils/AppError';
+import { asyncHandler } from '@/utils/asyncHandler';
+import { AppError } from '@/utils/AppError';
 import { Response, Request, NextFunction } from 'express';
-import { expenseInterface, Expense } from '../models/expenseModel';
+import { expenseInterface, Expense } from '@/models/expenseModel';
 import { ObjectId } from 'mongoose';
-import { Order } from 'src/interfaces/binance/order';
+import { Order } from '@/interfaces/binance/order';
 
 export const createExpense = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -22,7 +22,7 @@ export const createExpense = asyncHandler(
             success: true,
             expense,
         });
-    }
+    },
 );
 
 export const getExpenses = asyncHandler(async (req: Request, res: Response) => {
@@ -61,7 +61,7 @@ export const deleteExpense = asyncHandler(
             success: true,
             deletedExpend,
         });
-    }
+    },
 );
 
 export const deleteExpenses = asyncHandler(
@@ -76,7 +76,7 @@ export const deleteExpenses = asyncHandler(
             success: true,
             deletedExpenses,
         });
-    }
+    },
 );
 
 export const updateExpense = asyncHandler(
@@ -91,14 +91,14 @@ export const updateExpense = asyncHandler(
                 category,
                 amount,
             },
-            { new: true }
+            { new: true },
         );
         res.json({
             status: 'success',
             success: true,
             expense,
         });
-    }
+    },
 );
 
 export const createExpensesByJson = asyncHandler(
@@ -140,7 +140,7 @@ export const createExpensesByJson = asyncHandler(
                             order.note !== ' '
                                 ? order.note
                                 : `this is a binance order created on ${new Date(
-                                      order.date
+                                      order.date,
                                   )} and not edited. Please add what do you buy here: `,
                     };
                 }
@@ -150,5 +150,5 @@ export const createExpensesByJson = asyncHandler(
         const ids = await Expense.create(formatedData);
 
         res.json({ success: true, status: 'success', expenses: ids });
-    }
+    },
 );

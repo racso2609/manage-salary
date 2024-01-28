@@ -12,8 +12,8 @@ import {
     resetPassword,
     generateApiKey,
     getApiKey,
-} from '../controllers/authController';
-import { protect } from '../authenticate';
+} from '@/controllers/authController';
+import { protect } from '@/authenticate';
 
 router.post('/signup', signup);
 router.post('/login', login);

@@ -1,7 +1,8 @@
 import { NextFunction } from 'express';
 import { Document, Schema, model } from 'mongoose';
-import { Category, categoryInterface } from './categoriesModel';
-import { userInterface } from './userModel';
+import { Category, categoryInterface } from '@/models/categoriesModel';
+import { userInterface } from '@/models/userModel';
+
 const DEFAULT_CATEGORY_NAME = 'unknown';
 
 interface binanceExpenseInterface {
@@ -57,7 +58,7 @@ const ExpenseModel = new Schema<expenseInterface & Document>(
     },
     {
         timestamps: true,
-    }
+    },
 );
 
 ExpenseModel.pre('save', async function (next: NextFunction) {

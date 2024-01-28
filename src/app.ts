@@ -7,8 +7,8 @@ import helmet = require('helmet');
 import dotenv = require('dotenv');
 //import xss from "xss";
 // import ratelimit = require('express-rate-limit');
-import { globalErrorController } from './controllers/globalError';
-import { AppError } from './utils/AppError';
+import { globalErrorController } from '@/controllers/globalError';
+import { AppError } from '@/utils/AppError';
 
 dotenv.config();
 export const app = express();

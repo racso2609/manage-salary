@@ -1,5 +1,5 @@
 import { Document, Schema, model } from 'mongoose';
-import { userInterface } from '../models/userModel';
+import { userInterface } from '@/models/userModel';
 
 interface datesPeriod {
     date: string;
@@ -43,7 +43,7 @@ const automaticEntryModel = new Schema<entryInterface>(
         ],
         active: Boolean,
     },
-    { timestamps: true }
+    { timestamps: true },
 );
 
 const AutomaticEntry = model('AutomaticEntry', automaticEntryModel);

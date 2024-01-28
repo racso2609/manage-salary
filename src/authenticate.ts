@@ -4,15 +4,16 @@ import { NextFunction, Request, Response } from 'express';
 import { AppError } from '@/utils/AppError';
 import { userInterface, User } from '@/models/userModel';
 import { HeaderAPIKeyStrategy } from 'passport-headerapikey';
+import env from './env';
 
 type IDone = (error: null | Error, user?: userInterface) => void;
 
 passport.use(
     new Strategy(
         {
-            secretOrKey: process.env.SECRET_KEY,
+            secretOrKey: env.SECRET_KEY,
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(
-                process.env.SECRET_KEY,
+                env.SECRET_KEY,
             ),
         },
         async (token: any, done: IDone) => {

@@ -1,7 +1,5 @@
-import dotenv = require('dotenv');
 import { createExpense } from '@cronjobs/utils/binance';
 import { getMontshToUpdate } from '@cronjobs/utils/time';
-dotenv.config();
 
 (async () => {
     const monthsToUpdate = getMontshToUpdate();

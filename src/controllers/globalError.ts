@@ -1,4 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
+import env from '@/env';
+
 const sendErrorDevelopment = (error, res: Response) => {
     res.status(error.statusCode || 500).json({
         status: error.status || 'error',
@@ -26,10 +28,9 @@ export const globalErrorController = (
     error,
     _req: Request,
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
 ) => {
-    if (process.env.NODE_ENV === 'test') sendErrorDevelopment(error, res);
-    if (process.env.NODE_ENV === 'development')
-        sendErrorDevelopment(error, res);
-    if (process.env.NODE_ENV === 'production') sendErrorProduction(error, res);
+    if (env.NODE_ENV === 'development') sendErrorDevelopment(error, res);
+    sendErrorDevelopment(error, res);
+    if (env.NODE_ENV === 'production') sendErrorProduction(error, res);
 };

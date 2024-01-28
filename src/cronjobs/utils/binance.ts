@@ -1,17 +1,12 @@
-import axios from 'axios';
-import * as dotenv from 'dotenv';
 import { generateSignature } from '@cronjobs/utils';
 import { Order } from '@cronjobs/interfaces/order.d';
-dotenv.config();
-
-const HOST_BINANCE = process.env.BINANCE_HOST;
-const HOST = process.env.HOST;
+import { apiClient, binanceClient } from './services';
+import env from '@/env';
 
 export const createExpense = async (url: string, query: string) => {
-    const signature = generateSignature(query, process.env.BINANCE_SECRET_KEY);
-    const request = await axios.get(
-        `${HOST_BINANCE}/${url}?${query}&signature=${signature}`,
-        { headers: { 'X-MBX-APIKEY': process.env.BINANCE_API_KEY } },
+    const signature = generateSignature(query, env.BINANCE_SECRET_KEY);
+    const request = await binanceClient.get(
+        `/${url}?${query}&signature=${signature}`,
     );
     const expenses: Order[] = request?.data?.data
         .flat()
@@ -28,14 +23,9 @@ export const createExpense = async (url: string, query: string) => {
             date: expense.createTime,
             total: expense.totalPrice,
         }));
-    const API_KEY = 'ApiKey ' + process.env.API_KEY;
 
     try {
-        await axios.post(
-            `${HOST}/api/expenses/external/json`,
-            { expenses },
-            { headers: { Authorization: API_KEY } },
-        );
+        await apiClient.post(`/api/expenses/external/json`, { expenses });
     } catch (error) {
         console.log(error?.response?.data?.message);
         console.log('failed to create expenses');
@@ -47,10 +37,10 @@ export const createExpense = async (url: string, query: string) => {
 };
 
 export const createEntries = async (url, query) => {
-    const signature = generateSignature(query, process.env.BINANCE_SECRET_KEY);
-    const request = await axios.get(
-        `${HOST_BINANCE}/${url}?${query}&signature=${signature}`,
-        { headers: { 'X-MBX-APIKEY': process.env.BINANCE_API_KEY } },
+    const signature = generateSignature(query, env.BINANCE_SECRET_KEY);
+    const request = await binanceClient.get(
+        `/${url}?${query}&signature=${signature}`,
+        { headers: { 'X-MBX-APIKEY': env.BINANCE_API_KEY } },
     );
     const entriesAndExpenses = request.data.data;
     const entries: Order[] = entriesAndExpenses
@@ -81,14 +71,9 @@ export const createEntries = async (url, query) => {
             date: expense.transactionTime,
             total: '',
         }));
-    const API_KEY = 'ApiKey ' + process.env.API_KEY;
     if (expenses.length) {
         try {
-            await axios.post(
-                `${HOST}/api/expenses/external/json`,
-                { expenses },
-                { headers: { Authorization: API_KEY } },
-            );
+            await apiClient.post(`/api/expenses/external/json`, { expenses });
         } catch (error) {
             console.log(error?.response?.data?.message);
             console.log('fail expenses add');
@@ -97,11 +82,7 @@ export const createEntries = async (url, query) => {
 
     if (entries.length) {
         try {
-            await axios.post(
-                `${HOST}/api/entries/external/json`,
-                { entries },
-                { headers: { Authorization: API_KEY } },
-            );
+            await apiClient.post(`/api/entries/external/json`, { entries });
         } catch (error) {
             console.log(error?.response?.data?.message);
             console.log('fail entries add');

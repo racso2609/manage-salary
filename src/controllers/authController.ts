@@ -7,6 +7,7 @@ import { getVerificationEmailTemplate } from '@/helper/emailTemplates';
 import crypto = require('crypto');
 import { asyncHandler } from '@/utils/asyncHandler';
 import { Payload } from '@/interfaces/interfaces';
+import env from '@/env';
 
 const isValidEmail = (email: string) => /^\S+@\S+\.\S+$/.test(email);
 
@@ -23,7 +24,7 @@ declare global {
 }
 
 const signToken = (payload: Payload) =>
-    jwt.sign({ user: payload }, process.env.SECRET_KEY, {
+    jwt.sign({ user: payload }, env.SECRET_KEY, {
         expiresIn: 7200,
     });
 
@@ -63,7 +64,7 @@ export const signup = asyncHandler(
             email,
             password,
             phone,
-            photo: process.env.DEFAULT_USER_PHOTO,
+            photo: env.DEFAULT_USER_PHOTO,
             emailVerificationCode,
             emailVerified: false,
         });
@@ -135,7 +136,7 @@ export const verifyEmail = asyncHandler(
 
         if (!user) return next(new AppError('Code validation fail', 500));
 
-        const redirectionUrl = process.env.HOST;
+        const redirectionUrl = env.HOST;
         res.redirect(redirectionUrl);
     },
 );

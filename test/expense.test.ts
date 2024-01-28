@@ -28,7 +28,7 @@ describe('Expenses', () => {
     };
 
     beforeEach(async (context) => {
-        if (process.env.NODE_ENV === 'test') {
+        if (env.NODE_ENV === 'test') {
             context.db = await databaseConnection();
             await context.db.connection.db.dropDatabase();
             console.log('db deleted');

@@ -4,13 +4,19 @@ import cors = require('cors');
 import passport = require('passport');
 import morgan = require('morgan');
 import helmet = require('helmet');
-import dotenv = require('dotenv');
+import env from './env';
+import userRouter from './routes/user';
+import categoryRouter from './routes/category';
+import entryRouter from './routes/entry';
+import expenseRouter from './routes/expense';
+import dataRouter from './routes/data';
+import automaticEntry from './routes/automaticEntries';
+import databaseConnection from './db';
 //import xss from "xss";
 // import ratelimit = require('express-rate-limit');
 import { globalErrorController } from '@/controllers/globalError';
 import { AppError } from '@/utils/AppError';
 
-dotenv.config();
 export const app = express();
 // const limit = ratelimit({
 // max: 1000,
@@ -28,17 +34,10 @@ app.use(helmet());
 
 app.use(cors());
 app.use(passport.initialize());
-app.use(morgan(process.env.LOGGER));
+app.use(morgan(env.LOGGER));
 app.use(globalErrorController);
 
 //Routes
-import userRouter from './routes/user';
-import categoryRouter from './routes/category';
-import entryRouter from './routes/entry';
-import expenseRouter from './routes/expense';
-import dataRouter from './routes/data';
-import automaticEntry from './routes/automaticEntries';
-import databaseConnection from './db';
 
 app.use('/api/auth', userRouter);
 app.use('/api/categories', categoryRouter);
@@ -53,7 +52,7 @@ app.all('*', (_req: Request, _res: Response, next: NextFunction) => {
 
 app.use(globalErrorController);
 
-const PORT = process.env.PORT || 3001;
+const PORT = env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server is listening on ${PORT}`));
 export const db = databaseConnection()
     .then()

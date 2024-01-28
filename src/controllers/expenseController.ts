@@ -3,7 +3,7 @@ import { AppError } from '@/utils/AppError';
 import { Response, Request, NextFunction } from 'express';
 import { expenseInterface, Expense } from '@/models/expenseModel';
 import { ObjectId } from 'mongoose';
-import { Order } from '@/interfaces/binance/order';
+import { Order } from '@cronjobs/interfaces/order.d';
 
 export const createExpense = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {

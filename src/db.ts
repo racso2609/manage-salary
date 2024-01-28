@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-require('dotenv').config();
+import env from './env';
 
-const { NODE_ENV, MONGO_URI_TEST, MONGO_URI } = process.env;
+const { NODE_ENV, MONGO_URI_TEST, MONGO_URI } = env;
 const isTest = NODE_ENV === 'test';
 const connectionString = isTest ? MONGO_URI_TEST : MONGO_URI;
 

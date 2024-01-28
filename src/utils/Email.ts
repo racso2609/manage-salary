@@ -1,3 +1,4 @@
+import env from '@/env';
 import { transporter } from '@/utils/transporterNodeMon';
 
 interface EmailMessage {
@@ -13,7 +14,7 @@ export class Email {
     constructor(to: string, subject: string, text: string, html?: string) {
         this.message = {
             to,
-            from: process.env.EMAIL_FROM,
+            from: env.EMAIL_FROM,
             subject,
             text,
         };

@@ -3,7 +3,7 @@ import { Response, Request, NextFunction } from 'express';
 import { asyncHandler } from '@/utils/asyncHandler';
 import { AppError } from '@/utils/AppError';
 import { ObjectId } from 'mongoose';
-import { Order } from '@/interfaces/binance/order';
+import { Order } from '@cronjobs/interfaces/order.d';
 
 export const createEntry = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {

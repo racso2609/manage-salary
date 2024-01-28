@@ -1,4 +1,4 @@
-enum OrderType {
+export enum OrderType {
     P2P = 'P2P',
     C2C = 'C2C',
 }

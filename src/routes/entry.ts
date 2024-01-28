@@ -6,8 +6,8 @@ import {
     updateEntry,
     deleteEntry,
     createEntriesByJson,
-} from '../controllers/entryController';
-import { apiKeyProtected, protect } from '../authenticate';
+} from '@/controllers/entryController';
+import { apiKeyProtected, protect } from '@/authenticate';
 const router = express.Router();
 
 router.route('/').get(protect, getEntries).post(protect, createEntry);

@@ -1,12 +1,12 @@
-import { AppError } from '../utils/AppError';
+import { AppError } from '@/utils/AppError';
 import { NextFunction, Request, Response } from 'express';
 import jwt = require('jsonwebtoken');
-import { User, userInterface } from '../models/userModel';
-import { Email } from '../utils/Email';
-import { getVerificationEmailTemplate } from '../helper/emailTemplates';
+import { User, userInterface } from '@/models/userModel';
+import { Email } from '@/utils/Email';
+import { getVerificationEmailTemplate } from '@/helper/emailTemplates';
 import crypto = require('crypto');
-import { asyncHandler } from '../utils/asyncHandler';
-import { Payload } from '../interfaces/interfaces';
+import { asyncHandler } from '@/utils/asyncHandler';
+import { Payload } from '@/interfaces/interfaces';
 
 const isValidEmail = (email: string) => /^\S+@\S+\.\S+$/.test(email);
 
@@ -29,14 +29,14 @@ const signToken = (payload: Payload) =>
 
 const sendVerificationEmail = async (
     user: userInterface,
-    verificationUrl: string
+    verificationUrl: string,
 ) => {
     try {
         await new Email(
             user.email,
             'Verify your email',
             'Please verify your email by clicking on the button above',
-            getVerificationEmailTemplate(user, verificationUrl)
+            getVerificationEmailTemplate(user, verificationUrl),
         ).send();
     } catch (error) {
         // TODO: add db task to auto re-run
@@ -68,7 +68,7 @@ export const signup = asyncHandler(
             emailVerified: false,
         });
         const user = await User.find(createdUser._id).select(
-            'firstName lastName role phone email photo'
+            'firstName lastName role phone email photo',
         );
         const verificationUrl = `${req.protocol}://${req.headers.host}/api/auth/verify-email/${emailVerificationCode}`;
         await sendVerificationEmail(createdUser, verificationUrl);
@@ -78,7 +78,7 @@ export const signup = asyncHandler(
             success: true,
             user,
         });
-    }
+    },
 );
 export const login = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -90,12 +90,12 @@ export const login = asyncHandler(
 
         if (!user)
             return next(
-                new AppError('User with this email does not exist!', 404)
+                new AppError('User with this email does not exist!', 404),
             );
 
         if (!user.emailVerified)
             return next(
-                new AppError('Your email has not been verified yet!', 400)
+                new AppError('Your email has not been verified yet!', 400),
             );
         const isCorrectPassword = user.isValidPassword(password);
         if (!isCorrectPassword)
@@ -120,7 +120,7 @@ export const login = asyncHandler(
             firstname: user.firstName,
             lastname: user.lastName,
         });
-    }
+    },
 );
 
 export const verifyEmail = asyncHandler(
@@ -130,14 +130,14 @@ export const verifyEmail = asyncHandler(
         const user = await User.findOneAndUpdate(
             { emailVerificationCode },
             { emailVerified: true },
-            { new: true }
+            { new: true },
         );
 
         if (!user) return next(new AppError('Code validation fail', 500));
 
         const redirectionUrl = process.env.HOST;
         res.redirect(redirectionUrl);
-    }
+    },
 );
 
 export const forgotPassword = asyncHandler(
@@ -170,11 +170,11 @@ export const forgotPassword = asyncHandler(
             return next(
                 new AppError(
                     'There was an error sending email. Try again later!',
-                    500
-                )
+                    500,
+                ),
             );
         }
-    }
+    },
 );
 
 export const resetPassword = asyncHandler(
@@ -183,7 +183,10 @@ export const resetPassword = asyncHandler(
 
         if (!password || password.length < 6)
             return next(
-                new AppError('Password must be greater than 6 characters!', 400)
+                new AppError(
+                    'Password must be greater than 6 characters!',
+                    400,
+                ),
             );
 
         const hashedToken = crypto
@@ -219,20 +222,20 @@ export const resetPassword = asyncHandler(
             token,
             data: payload,
         });
-    }
+    },
 );
 
 export const getProfile = asyncHandler(
     async (req: Request, res: Response, _next: NextFunction) => {
         const user = await User.findById(req.user._id).select(
-            'firstName lastName role phone email'
+            'firstName lastName role phone email',
         );
         res.status(200).json({
             status: 'success',
             success: true,
             user,
         });
-    }
+    },
 );
 export const updateProfile = asyncHandler(
     async (req: Request, res: Response, _next: NextFunction) => {
@@ -246,14 +249,14 @@ export const updateProfile = asyncHandler(
                 email,
                 phone,
             },
-            { new: true }
+            { new: true },
         );
 
         res.status(200).json({
             status: 'success',
             data: updatedUser,
         });
-    }
+    },
 );
 
 export const getLoggedInUser = asyncHandler(
@@ -269,7 +272,7 @@ export const getLoggedInUser = asyncHandler(
             Lastname: user.lastName,
             success: true,
         });
-    }
+    },
 );
 
 export const generateApiKey = asyncHandler(
@@ -280,7 +283,7 @@ export const generateApiKey = asyncHandler(
         await user.save({ validateBeforeSave: false });
 
         res.json({ status: 'success', success: true, apiKey });
-    }
+    },
 );
 export const getApiKey = asyncHandler(
     async (req: Request, res: Response, _next: NextFunction) => {
@@ -288,5 +291,5 @@ export const getApiKey = asyncHandler(
         const user = await User.findById(_id);
         const apiKey = user.apiKey;
         res.json({ status: 'success', success: true, apiKey });
-    }
+    },
 );

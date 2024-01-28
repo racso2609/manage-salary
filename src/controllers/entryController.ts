@@ -1,9 +1,9 @@
-import { Entry, entryInterface } from '../models/entryModel';
+import { Entry, entryInterface } from '@/models/entryModel';
 import { Response, Request, NextFunction } from 'express';
-import { asyncHandler } from '../utils/asyncHandler';
-import { AppError } from '../utils/AppError';
+import { asyncHandler } from '@/utils/asyncHandler';
+import { AppError } from '@/utils/AppError';
 import { ObjectId } from 'mongoose';
-import { Order } from 'src/interfaces/binance/order';
+import { Order } from '@/interfaces/binance/order';
 
 export const createEntry = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -23,7 +23,7 @@ export const createEntry = asyncHandler(
             status: 'success',
             success: true,
         });
-    }
+    },
 );
 
 export const getEntries = asyncHandler(
@@ -41,7 +41,7 @@ export const getEntries = asyncHandler(
             success: true,
             entries,
         });
-    }
+    },
 );
 
 export const getEntry = asyncHandler(async (req: Request, res: Response) => {
@@ -71,7 +71,7 @@ export const updateEntry = asyncHandler(
             status: 'success',
             entry,
         });
-    }
+    },
 );
 
 export const deleteEntry = asyncHandler(async (req: Request, res: Response) => {
@@ -124,7 +124,7 @@ export const createEntriesByJson = asyncHandler(
                             order.note !== ' '
                                 ? order.note
                                 : `this is a binance order created on ${new Date(
-                                      order.date
+                                      order.date,
                                   )} and not edited. Please add what do you buy here: `,
                     };
                 }
@@ -134,5 +134,5 @@ export const createEntriesByJson = asyncHandler(
         const ids = await Entry.create(formatedData);
 
         res.json({ success: true, status: 'success', expenses: ids });
-    }
+    },
 );

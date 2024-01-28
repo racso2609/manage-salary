@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { asyncHandler } from '../utils/asyncHandler';
-import { AppError } from '../utils/AppError';
-import { Entry } from '../models/entryModel';
-import { Expense } from '../models/expenseModel';
+import { asyncHandler } from '@/utils/asyncHandler';
+import { Entry } from '@/models/entryModel';
+import { Expense } from '@/models/expenseModel';
 import { Types } from 'mongoose';
 const ObjectId = Types.ObjectId;
 
@@ -29,5 +28,5 @@ export const getTotalAvaliable = asyncHandler(
             totalEntries,
             total: totalEntries - totalExpenses,
         });
-    }
+    },
 );

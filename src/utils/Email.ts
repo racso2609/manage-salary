@@ -1,4 +1,4 @@
-import { transporter } from './transporterNodeMon';
+import { transporter } from '@/utils/transporterNodeMon';
 
 interface EmailMessage {
     to: string;

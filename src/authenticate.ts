@@ -1,8 +1,8 @@
 import passport = require('passport');
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { NextFunction, Request, Response } from 'express';
-import { AppError } from './utils/AppError';
-import { userInterface, User } from './models/userModel';
+import { AppError } from '@/utils/AppError';
+import { userInterface, User } from '@/models/userModel';
 import { HeaderAPIKeyStrategy } from 'passport-headerapikey';
 
 type IDone = (error: null | Error, user?: userInterface) => void;
@@ -12,7 +12,7 @@ passport.use(
         {
             secretOrKey: process.env.SECRET_KEY,
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(
-                process.env.SECRET_KEY
+                process.env.SECRET_KEY,
             ),
         },
         async (token: any, done: IDone) => {
@@ -21,8 +21,8 @@ passport.use(
             } catch (error) {
                 return done(error);
             }
-        }
-    )
+        },
+    ),
 );
 
 export const restrictTo =
@@ -32,8 +32,8 @@ export const restrictTo =
             return next(
                 new AppError(
                     'You do not have access to perform this action',
-                    403
-                )
+                    403,
+                ),
             );
 
         next();
@@ -54,8 +54,8 @@ passport.use(
             } catch (error) {
                 return done(error);
             }
-        }
-    )
+        },
+    ),
 );
 
 export const protect = passport.authenticate('jwt', { session: false });

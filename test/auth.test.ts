@@ -1,16 +1,14 @@
 require('dotenv').config();
 import { beforeEach, describe, expect, test } from 'vitest';
 import request = require('supertest');
-import databaseConnection from '../db';
-import mongoose from 'mongoose';
-import { User } from 'src/models/userModel';
+import databaseConnection from '../src/db';
 
 import { vi } from 'vitest';
 import { HOST, signup } from './utils';
 
 declare module 'vitest' {
     export interface TestContext {
-        db?: typeof mongoose;
+        db?: typeof import('mongoose');
         forgotData?: { email: string };
         newPassword?: string;
         token: string;
@@ -26,7 +24,7 @@ describe('testing-server-routes', () => {
     beforeEach(async (context) => {
         if (process.env.NODE_ENV === 'test') {
             context.db = await databaseConnection();
-            await context.db.connection.db.dropDatabase();
+            await context?.db?.connection.db.dropDatabase();
             console.log('db deleted');
         }
     });
@@ -37,7 +35,7 @@ describe('testing-server-routes', () => {
             .send(userData);
         expect(response.statusCode).toBe(404);
         expect(response._body.message).toBe(
-            'User with this email does not exist!'
+            'User with this email does not exist!',
         );
     });
     test('POST /signup - create user', async () => {
@@ -77,7 +75,7 @@ describe('testing-server-routes', () => {
                 .send(userData);
             expect(response.statusCode).toBe(400);
             expect(response._body.message).toBe(
-                'Your email has not been verified yet!'
+                'Your email has not been verified yet!',
             );
         });
         test('Post /verify should verify', async () => {
@@ -149,9 +147,9 @@ describe('testing-server-routes', () => {
                 }) => {
                     const response = await request(HOST)
                         .post(`/api/auth/forgot-password`)
-                        .send({ email: forgotData.email });
+                        .send({ email: forgotData?.email });
                     const user = await User.findOne({
-                        email: forgotData.email,
+                        email: forgotData?.email,
                     });
                     expect(response.statusCode).toBe(200);
                     expect(user.passwordResetToken).toBeTruthy;
@@ -162,9 +160,9 @@ describe('testing-server-routes', () => {
 
                         const response = await request(HOST)
                             .post(`/api/auth/forgot-password`)
-                            .send({ email: context.forgotData.email });
+                            .send({ email: context?.forgotData?.email });
                         const user = await User.findOne({
-                            email: context.forgotData.email,
+                            email: context?.forgotData?.email,
                         });
                         expect(response.statusCode).toBe(200);
                         expect(user.passwordResetToken).toBeTruthy;
@@ -175,13 +173,13 @@ describe('testing-server-routes', () => {
                         newPassword,
                     }) => {
                         const user = await User.findOne({
-                            email: forgotData.email,
+                            email: forgotData?.email,
                         });
 
                         let response = await request(HOST)
                             .post(
                                 // WARN: it is not the correct code
-                                `/api/auth/reset-password/${user.passwordResetToken}`
+                                `/api/auth/reset-password/${user.passwordResetToken}`,
                             )
                             .send({ password: newPassword });
                         expect(response.statusCode).toBe(200);
@@ -197,17 +195,17 @@ describe('testing-server-routes', () => {
                         forgotData,
                     }) => {
                         const user = await User.findOne({
-                            email: forgotData.email,
+                            email: forgotData?.email,
                         });
                         const response = await request(HOST)
                             .post(
-                                `/api/auth/reset-password/${user.passwordResetToken}`
+                                `/api/auth/reset-password/${user.passwordResetToken}`,
                             )
                             .send({ password: 'a' });
 
                         expect(response.statusCode).toBe(400);
                         expect(response._body.message).toBe(
-                            'Password must be greater than 6 characters!'
+                            'Password must be greater than 6 characters!',
                         );
                     });
                     test('Post /reset-password should revert Token is invalid', async ({
@@ -219,7 +217,7 @@ describe('testing-server-routes', () => {
 
                         expect(response.statusCode).toBe(400);
                         expect(response._body.message).toBe(
-                            'Token is invalid or has expired'
+                            'Token is invalid or has expired',
                         );
                     });
                     test('Post /reset-password should revert Token is expired', async ({
@@ -227,17 +225,17 @@ describe('testing-server-routes', () => {
                         newPassword,
                     }) => {
                         const user = await User.findOne({
-                            email: forgotData.email,
+                            email: forgotData?.email,
                         });
                         const response = await request(HOST)
                             .post(
-                                `/api/auth/reset-password/${user.passwordResetToken}`
+                                `/api/auth/reset-password/${user.passwordResetToken}`,
                             )
                             .send({ password: newPassword });
                         vi.setSystemTime(Date.now() + 10 * 60 * 1000 + 1);
                         expect(response.statusCode).toBe(400);
                         expect(response._body.message).toBe(
-                            'Token is invalid or has expired'
+                            'Token is invalid or has expired',
                         );
                     });
                 });

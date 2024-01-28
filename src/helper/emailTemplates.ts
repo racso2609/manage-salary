@@ -1,8 +1,8 @@
-import { userInterface } from '../models/userModel';
+import { userInterface } from '@/models/userModel';
 
 export const getVerificationEmailTemplate = (
     user: userInterface,
-    verificationUrl: string
+    verificationUrl: string,
 ) => {
     return `
     <div>

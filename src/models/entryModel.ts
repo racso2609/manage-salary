@@ -1,5 +1,5 @@
 import { Document, Schema, model } from 'mongoose';
-import { userInterface } from '../models/userModel';
+import { userInterface } from '@/models/userModel';
 interface binanceEntryInterface {
     binanceId: string;
     unitPrice: string;
@@ -50,7 +50,7 @@ const EntryModel = new Schema<entryInterface & Document>(
             orderType: { type: String, default: 'P2P' },
         },
     },
-    { timestamps: true }
+    { timestamps: true },
 );
 
 const Entry = model('Entry', EntryModel);

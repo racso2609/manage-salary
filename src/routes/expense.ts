@@ -7,8 +7,8 @@ import {
     getExpense,
     getExpenses,
     updateExpense,
-} from '../controllers/expenseController';
-import { apiKeyProtected, protect } from '../authenticate';
+} from '@/controllers/expenseController';
+import { apiKeyProtected, protect } from '@/authenticate';
 const router = express.Router();
 
 router

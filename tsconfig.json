@@ -5,10 +5,10 @@
         "outDir": "dist",
         "sourceMap": true,
         "paths": {
-            "src/*": ["./src/*"]
+            "@/*": ["./src/*"]
         }
     },
 
-    "include": ["src/**/*", "test/**/*.test.ts"],
-    "exclude": ["./node_modules", "./node_modules/*"]
+    "include": ["src/**/*"],
+    "exclude": ["./node_modules", "./node_modules/*", "test/**/*.test.ts"]
 }

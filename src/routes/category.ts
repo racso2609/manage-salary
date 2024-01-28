@@ -1,9 +1,9 @@
 import express = require('express');
-import { protect } from '../authenticate';
+import { protect } from '@/authenticate';
 import {
     getCategories,
     createCategory,
-} from '../controllers/categoriesController';
+} from '@/controllers/categoriesController';
 
 const router = express.Router();
 

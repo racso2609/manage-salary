@@ -9,6 +9,6 @@
         }
     },
 
-    "include": ["src/**/*"],
-    "exclude": ["./node_modules", "./node_modules/*", "src/**/*.test.ts"]
+    "include": ["src/**/*", "test/**/*.test.ts"],
+    "exclude": ["./node_modules", "./node_modules/*"]
 }

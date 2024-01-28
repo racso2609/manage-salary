@@ -6,7 +6,7 @@
     "scripts": {
         "tsc": "tsc",
         "start": "npx nodemon src/app.ts",
-        "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts",
+        "dev": "ts-node-dev -r tsconfig-paths/register  --respawn --transpile-only ./src/app.ts",
         "prod": "tsc && node ./dist/app.js",
         "test": "NODE_ENV=test npx vitest",
         "test:server": "NODE_ENV=test pnpm dev",
@@ -53,6 +53,8 @@
         "@typescript-eslint/parser": "^5.7.0",
         "eslint": "^8.0.1",
         "rimraf": "^4.4.0",
+        "ts-node": "^10.9.2",
+        "tsconfig-paths": "^4.2.0",
         "typescript": "*",
         "vite-tsconfig-paths": "^4.3.1",
         "vitest": "^1.2.2"

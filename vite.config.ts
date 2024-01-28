@@ -6,8 +6,5 @@ export default defineConfig({
     test: {
         // ...
         testTimeout: 10000,
-        alias: {
-            '@/*': new URL('./src/', import.meta.url).pathname,
-        },
     },
 });

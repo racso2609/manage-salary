@@ -1,5 +1,6 @@
 import { Document, Schema, model } from 'mongoose';
-import { userInterface } from '@/models/userModel';
+import User from '@/models/userModel';
+
 interface binanceEntryInterface {
     binanceId: string;
     unitPrice: string;
@@ -10,17 +11,17 @@ interface binanceEntryInterface {
     date: Date;
     orderType: string;
 }
-interface entryInterface {
+interface Entry {
     amount: number;
     description: string;
-    user: Schema.Types.ObjectId | userInterface;
+    user: Schema.Types.ObjectId | User;
     createAt?: Date;
     updateAt?: Date;
     name: string;
     binance: binanceEntryInterface;
 }
 
-const EntryModel = new Schema<entryInterface & Document>(
+const EntryModel = new Schema<Entry & Document>(
     {
         name: {
             type: String,
@@ -54,4 +55,4 @@ const EntryModel = new Schema<entryInterface & Document>(
 );
 
 const Entry = model('Entry', EntryModel);
-export { Entry, entryInterface };
+export default Entry;

@@ -1,7 +1,7 @@
 import { NextFunction } from 'express';
 import { Document, Schema, model } from 'mongoose';
-import { Category, categoryInterface } from '@/models/categoriesModel';
-import { userInterface } from '@/models/userModel';
+import Category from '@/models/categoriesModel';
+import User from '@/models/userModel';
 
 const DEFAULT_CATEGORY_NAME = 'unknown';
 
@@ -16,15 +16,15 @@ interface binanceExpenseInterface {
     orderType: string;
 }
 
-interface expenseInterface {
+type Expense = {
     amount: number;
-    category?: Schema.Types.ObjectId | categoryInterface;
+    category?: Schema.Types.ObjectId | Category;
     description: string;
-    user: Schema.Types.ObjectId | userInterface;
+    user: Schema.Types.ObjectId | User;
     binance: binanceExpenseInterface;
-}
+};
 
-const ExpenseModel = new Schema<expenseInterface & Document>(
+const ExpenseModel = new Schema<Expense & Document>(
     {
         amount: {
             type: Number,
@@ -77,4 +77,4 @@ ExpenseModel.pre('save', async function (next: NextFunction) {
 });
 
 const Expense = model('Expense', ExpenseModel);
-export { Expense, expenseInterface };
+export default Expense;

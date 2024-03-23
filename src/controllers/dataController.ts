@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { asyncHandler } from '@/utils/asyncHandler';
-import { Entry } from '@/models/entryModel';
-import { Expense } from '@/models/expenseModel';
+import Entry from '@/models/entryModel';
+import Expense from '@/models/expenseModel';
 import { Types } from 'mongoose';
 const ObjectId = Types.ObjectId;
 

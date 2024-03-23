@@ -2,7 +2,7 @@ import { Document, Schema, model } from 'mongoose';
 import bcrypt = require('bcrypt');
 import crypto = require('crypto');
 
-interface userInterface extends Document {
+type User = Document & {
     email: string;
     password: string;
     role: string;
@@ -17,8 +17,8 @@ interface userInterface extends Document {
     createPasswordResetToken: () => string;
     createApiKey: () => string;
     apiKey?: string;
-}
-const UserModel = new Schema<userInterface>({
+};
+const UserModel = new Schema<User>({
     email: {
         type: String,
         require: true,
@@ -82,4 +82,4 @@ UserModel.methods.createApiKey = function () {
 };
 
 const User = model('User', UserModel);
-export { User, userInterface };
+export default User;

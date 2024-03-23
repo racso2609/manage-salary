@@ -5,9 +5,10 @@ import { HOST, login, signup } from './utils';
 import databaseConnection from 'src/db';
 import mongoose from 'mongoose';
 import { User } from 'src/models/userModel';
-import { expenseInterface } from 'src/models/expenseModel';
+import Expense from 'src/models/expenseModel';
+import { env } from 'process';
 
-interface Expense extends expenseInterface {
+interface Expense extends Expense {
     _id: string;
 }
 

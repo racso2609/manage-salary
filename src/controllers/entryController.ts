@@ -1,4 +1,4 @@
-import { Entry, entryInterface } from '@/models/entryModel';
+import Entry from '@/models/entryModel';
 import { Response, Request, NextFunction } from 'express';
 import { asyncHandler } from '@/utils/asyncHandler';
 import { AppError } from '@/utils/AppError';
@@ -7,7 +7,7 @@ import { Order } from '@cronjobs/interfaces/order.d';
 
 export const createEntry = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-        const { amount, description, name }: entryInterface = req.body;
+        const { amount, description, name }: Entry = req.body;
         const { _id } = req.user;
         if (!amount || !description)
             return next(new AppError('Missing Data!', 400));
@@ -99,7 +99,7 @@ export const createEntriesByJson = asyncHandler(
             if (entry) orderIdsRegistered.push(data[i].orderId);
         }
 
-        const formatedData: entryInterface[] = data
+        const formatedData: Entry[] = data
             .map((order) => {
                 if (!orderIdsRegistered.includes(order.orderId)) {
                     orderIdsRegistered.push(order.orderId);

@@ -2,11 +2,11 @@ import passport = require('passport');
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import { NextFunction, Request, Response } from 'express';
 import { AppError } from '@/utils/AppError';
-import { userInterface, User } from '@/models/userModel';
+import User from '@/models/userModel';
 import { HeaderAPIKeyStrategy } from 'passport-headerapikey';
 import env from './env';
 
-type IDone = (error: null | Error, user?: userInterface) => void;
+type IDone = (error: null | Error, user?: User) => void;
 
 passport.use(
     new Strategy(

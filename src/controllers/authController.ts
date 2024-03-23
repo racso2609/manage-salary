@@ -1,7 +1,7 @@
 import { AppError } from '@/utils/AppError';
 import { NextFunction, Request, Response } from 'express';
 import jwt = require('jsonwebtoken');
-import { User, userInterface } from '@/models/userModel';
+import User from '@/models/userModel';
 import { Email } from '@/utils/Email';
 import { getVerificationEmailTemplate } from '@/helper/emailTemplates';
 import crypto = require('crypto');
@@ -28,10 +28,7 @@ const signToken = (payload: Payload) =>
         expiresIn: 7200,
     });
 
-const sendVerificationEmail = async (
-    user: userInterface,
-    verificationUrl: string,
-) => {
+const sendVerificationEmail = async (user: User, verificationUrl: string) => {
     try {
         await new Email(
             user.email,
@@ -48,8 +45,7 @@ const sendVerificationEmail = async (
 
 export const signup = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-        const { firstName, lastName, password, phone }: userInterface =
-            req.body;
+        const { firstName, lastName, password, phone }: User = req.body;
 
         let email = req.body.email;
         email = email.toLowerCase();

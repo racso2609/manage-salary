@@ -1,13 +1,13 @@
 import { asyncHandler } from '@/utils/asyncHandler';
 import { AppError } from '@/utils/AppError';
 import { Response, Request, NextFunction } from 'express';
-import { expenseInterface, Expense } from '@/models/expenseModel';
+import Expense from '@/models/expenseModel';
 import { ObjectId } from 'mongoose';
 import { Order } from '@cronjobs/interfaces/order.d';
 
 export const createExpense = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-        const { amount, category, description }: expenseInterface = req.body;
+        const { amount, category, description }: Expense = req.body;
         const { _id } = req.user;
         if (!amount || !category || !description)
             return next(new AppError('Missing Data!', 400));
@@ -116,7 +116,7 @@ export const createExpensesByJson = asyncHandler(
             if (expense) orderIdsRegistered.push(data[i].orderId);
         }
 
-        const formatedData: expenseInterface[] = data
+        const formatedData: Expense[] = data
             .map((order) => {
                 if (!orderIdsRegistered.includes(order.orderId)) {
                     orderIdsRegistered.push(order.orderId);

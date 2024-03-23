@@ -10,10 +10,7 @@ import categoryRouter from '@/routes/category';
 import entryRouter from '@/routes/entry';
 import expenseRouter from '@/routes/expense';
 import dataRouter from '@/routes/data';
-import automaticEntry from '@/routes/automaticEntries';
 import databaseConnection from './db';
-//import xss from "xss";
-// import ratelimit = require('express-rate-limit');
 import { globalErrorController } from '@/controllers/globalError';
 import { AppError } from '@/utils/AppError';
 
@@ -44,7 +41,6 @@ app.use('/api/categories', categoryRouter);
 app.use('/api/entries', entryRouter);
 app.use('/api/expenses', expenseRouter);
 app.use('/api/data', dataRouter);
-app.use('/api/automatic-entries', automaticEntry);
 
 app.all('*', (_req: Request, _res: Response, next: NextFunction) => {
     return next(new AppError('This route is not yet defined!', 404));

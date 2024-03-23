@@ -4,6 +4,7 @@ import { Response, Request, NextFunction } from 'express';
 import Expense from '@/models/expenseModel';
 import { ObjectId } from 'mongoose';
 import { Order } from '@cronjobs/interfaces/order.d';
+import { INTEGRATIONS } from '@/interfaces/EntryAndExpensesManagers';
 
 export const createExpense = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -122,6 +123,7 @@ export const createExpensesByJson = asyncHandler(
                     orderIdsRegistered.push(order.orderId);
                     return {
                         amount: Number(order.amount),
+                        type: INTEGRATIONS.BINANCE,
                         binance: {
                             binanceId: order.orderId,
                             unitPrice: order.unitPrice,

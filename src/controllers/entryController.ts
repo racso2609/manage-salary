@@ -4,6 +4,7 @@ import { asyncHandler } from '@/utils/asyncHandler';
 import { AppError } from '@/utils/AppError';
 import { ObjectId } from 'mongoose';
 import { Order } from '@cronjobs/interfaces/order.d';
+import { INTEGRATIONS } from '@/interfaces/EntryAndExpensesManagers';
 
 export const createEntry = asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -106,6 +107,7 @@ export const createEntriesByJson = asyncHandler(
                     return {
                         name: order.note || 'alliance',
                         amount: Number(order.amount),
+                        type: INTEGRATIONS.BINANCE,
                         binance: {
                             binanceId: order.orderId,
                             unitPrice: order.unitPrice,

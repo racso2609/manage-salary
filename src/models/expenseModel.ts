@@ -2,27 +2,25 @@ import { NextFunction } from 'express';
 import { Document, Schema, model } from 'mongoose';
 import Category from '@/models/categoriesModel';
 import User from '@/models/userModel';
+import {
+    BinanceRegister,
+    INTEGRATIONS as ExpenseOptions,
+} from '@/interfaces/EntryAndExpensesManagers';
 
 const DEFAULT_CATEGORY_NAME = 'unknown';
 
-interface binanceExpenseInterface {
-    binanceId: string;
-    unitPrice: string;
-    fiat: string;
-    total: string;
-    asset: string;
-    seller: string;
-    date: Date;
-    orderType: string;
-}
+type ExpenseType = {
+    type: ExpenseOptions.BINANCE;
+    binance: BinanceRegister;
+};
 
 type Expense = {
     amount: number;
     category?: Schema.Types.ObjectId | Category;
     description: string;
     user: Schema.Types.ObjectId | User;
-    binance: binanceExpenseInterface;
-};
+    binance: BinanceRegister;
+} & ExpenseType;
 
 const ExpenseModel = new Schema<Expense & Document>(
     {
@@ -45,6 +43,10 @@ const ExpenseModel = new Schema<Expense & Document>(
             ref: 'User',
             required: true,
         },
+        type: {
+            enum: Object.values(ExpenseOptions),
+            default: ExpenseOptions.BINANCE,
+        },
         binance: {
             binanceId: { type: String, unique: true },
             seller: String,
@@ -54,6 +56,9 @@ const ExpenseModel = new Schema<Expense & Document>(
             asset: { type: String },
             date: { type: Date },
             orderType: { type: String, default: 'P2P' },
+            required: function () {
+                return this.type === ExpenseOptions.BINANCE;
+            },
         },
     },
     {

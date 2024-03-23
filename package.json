@@ -4,14 +4,12 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "tsc": "tsc",
         "start": "npx nodemon src/app.ts",
         "dev": "ts-node-dev -r tsconfig-paths/register  --respawn --transpile-only ./src/app.ts",
         "prod": "tsc && node ./dist/app.js",
         "test": "NODE_ENV=test npx vitest",
         "test:server": "NODE_ENV=test pnpm dev",
-        "build": "rimraf dist && tsc",
-        "ts.check": "tsc --project tsconfig.json",
+        "build": "tsc",
         "add-build": "git add dist"
     },
     "author": "",

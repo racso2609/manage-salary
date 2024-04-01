@@ -48,9 +48,9 @@ const getConfig = (): Partial<ENV> => {
         CLOUD_NAME: process.env.CLOUD_NAME,
         CLOUD_KEY: process.env.CLOUD_KEY,
         CLOUD_SECRET: process.env.CLOUD_SECRET,
-        BINANCE_API_KEY: process.env.BINANCE_API_KEY,
-        BINANCE_SECRET_KEY: process.env.BINANCE_SECRET_KEY,
-        BINANCE_HOST: process.env.BINANCE_HOST,
+        // BINANCE_API_KEY: process.env.BINANCE_API_KEY,
+        // BINANCE_SECRET_KEY: process.env.BINANCE_SECRET_KEY,
+        // BINANCE_HOST: process.env.BINANCE_HOST,
     };
 };
 

@@ -5,6 +5,7 @@ import databaseConnection from '../src/db';
 
 import { vi } from 'vitest';
 import { HOST, signup } from './utils';
+import env from '../src/env';
 
 declare module 'vitest' {
     export interface TestContext {
